@@ -1,0 +1,25 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>heartbeats-simple-parent</artifactId>
+    <groupId>edu.uchicago.cs.heartbeats</groupId>
+    <version>0.0.1-SNAPSHOT</version>
+    <relativePath>..</relativePath>
+  </parent>
+  <artifactId>hbs</artifactId>
+  <name>Heartbeats-Simple Java Bindings</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>edu.uchicago.cs.heartbeats</groupId>
+      <artifactId>heartbeats-simple-native-jni</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>edu.uchicago.cs.heartbeats</groupId>
+      <artifactId>libhbs-wrapper</artifactId>
+      <type>so</type>
+      <scope>runtime</scope>
+    </dependency>
+  </dependencies>
+</project>

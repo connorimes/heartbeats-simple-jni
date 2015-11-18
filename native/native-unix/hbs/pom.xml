@@ -3,14 +3,14 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <artifactId>heartbeats-simple-native-linux-parent</artifactId>
+    <artifactId>heartbeats-simple-native-unix-parent</artifactId>
     <groupId>edu.uchicago.cs.heartbeats</groupId>
     <version>0.0.1-SNAPSHOT</version>
     <relativePath>..</relativePath>
   </parent>
 
-  <artifactId>libhbs-pow-wrapper</artifactId>
-  <name>Heartbeats-Simple-Power Native Linux</name>
+  <artifactId>libhbs-wrapper</artifactId>
+  <name>Heartbeats-Simple Native Unix/Linux</name>
   <packaging>so</packaging>
 
   <properties>
@@ -33,12 +33,12 @@
         <extensions>true</extensions>
         <configuration>
           <!-- trigger javah -->
-          <javahOS>linux</javahOS>
+          <javahOS>unix</javahOS>
           <sources>
             <source>
               <directory>${basedir}/../../src/main/native</directory>
               <fileNames>
-                <fileName>hbs-pow-wrapper.c</fileName>
+                <fileName>hbs-wrapper.c</fileName>
               </fileNames>
             </source>
           </sources>
@@ -53,7 +53,7 @@
           </linkerStartOptions>
           <linkerEndOptions>
             <linkerEndOption>${LDFLAGS}</linkerEndOption>
-            <linkerEndOption>-lhbs-pow</linkerEndOption>
+            <linkerEndOption>-lhbs</linkerEndOption>
           </linkerEndOptions>
         </configuration>
         <executions>
@@ -61,13 +61,13 @@
             <id>javah</id>
             <phase>generate-sources</phase>
             <configuration>
-              <javahOS>linux</javahOS>
+              <javahOS>unix</javahOS>
               <javahProvider>default</javahProvider>
               <javahOutputDirectory>${project.build.directory}/custom-javah</javahOutputDirectory>
               <workingDirectory>${basedir}</workingDirectory>
-              <javahOutputFileName>hbs-pow-wrapper.h</javahOutputFileName>
+              <javahOutputFileName>hbs-wrapper.h</javahOutputFileName>
               <javahClassNames>
-                <javahClassName>edu.uchicago.cs.heartbeats.HeartbeatPowJNI</javahClassName>
+                <javahClassName>edu.uchicago.cs.heartbeats.HeartbeatJNI</javahClassName>
               </javahClassNames>
             </configuration>
             <goals>

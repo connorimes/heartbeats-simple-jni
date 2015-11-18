@@ -2,32 +2,21 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <artifactId>heartbeats-simple-parent</artifactId>
+    <artifactId>heartbeats-simple-native-parent</artifactId>
     <groupId>edu.uchicago.cs.heartbeats</groupId>
     <version>0.0.1-SNAPSHOT</version>
     <relativePath>..</relativePath>
   </parent>
 
-  <artifactId>heartbeats-simple-native-parent</artifactId>
-  <name>Heartbeats-Simple Native Parent</name>
+  <artifactId>heartbeats-simple-native-unix-parent</artifactId>
+  <name>Heartbeats-Simple Native Unix/Linux Parent</name>
   <packaging>pom</packaging>
 
   <modules>
-    <module>native-jni</module>
+    <module>hbs</module>
+    <module>hbs-acc</module>
+    <module>hbs-pow</module>
+    <module>hbs-acc-pow</module>
   </modules>
-
-  <profiles>
-    <profile>
-      <id>unix</id>
-      <activation>
-        <os>
-          <family>unix</family>
-        </os>
-      </activation>
-      <modules>
-        <module>native-unix</module>
-      </modules>
-    </profile>
-  </profiles>
 
 </project>

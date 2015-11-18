@@ -3,14 +3,14 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <artifactId>heartbeats-simple-native-linux-parent</artifactId>
+    <artifactId>heartbeats-simple-native-unix-parent</artifactId>
     <groupId>edu.uchicago.cs.heartbeats</groupId>
     <version>0.0.1-SNAPSHOT</version>
     <relativePath>..</relativePath>
   </parent>
 
   <artifactId>libhbs-acc-wrapper</artifactId>
-  <name>Heartbeats-Simple-Accuracy Native Linux</name>
+  <name>Heartbeats-Simple-Accuracy Native Unix/Linux</name>
   <packaging>so</packaging>
 
   <properties>
@@ -33,7 +33,7 @@
         <extensions>true</extensions>
         <configuration>
           <!-- trigger javah -->
-          <javahOS>linux</javahOS>
+          <javahOS>unix</javahOS>
           <sources>
             <source>
               <directory>${basedir}/../../src/main/native</directory>
@@ -61,7 +61,7 @@
             <id>javah</id>
             <phase>generate-sources</phase>
             <configuration>
-              <javahOS>linux</javahOS>
+              <javahOS>unix</javahOS>
               <javahProvider>default</javahProvider>
               <javahOutputDirectory>${project.build.directory}/custom-javah</javahOutputDirectory>
               <workingDirectory>${basedir}</workingDirectory>

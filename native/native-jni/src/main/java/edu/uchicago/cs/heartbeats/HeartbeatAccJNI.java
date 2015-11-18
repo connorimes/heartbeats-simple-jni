@@ -27,7 +27,7 @@ public final class HeartbeatAccJNI {
 
 	public native ByteBuffer heartbeatAccInit(int window_size);
 
-	public native int heartbeatAcc(ByteBuffer ptr, long userTag, long work, long startTime, long endTime,
+	public native void heartbeatAcc(ByteBuffer ptr, long userTag, long work, long startTime, long endTime,
 			long accuracy);
 
 	public native int heartbeatAccFinish(ByteBuffer ptr);

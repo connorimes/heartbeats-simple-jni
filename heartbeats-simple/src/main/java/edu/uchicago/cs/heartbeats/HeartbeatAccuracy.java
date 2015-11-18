@@ -15,8 +15,6 @@ public interface HeartbeatAccuracy extends Heartbeat {
 	 * @param startTime
 	 * @param endTime
 	 * @param accuracy
-	 * @throws IllegalArgumentException
-	 *             if heartbeat fails
 	 */
 	void heartbeat(long userTag, long work, long startTime, long endTime, long accuracy);
 

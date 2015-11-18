@@ -10,13 +10,10 @@
 #include <heartbeat-acc-pow.h>
 #include <hbs-acc-pow-wrapper.h>
 
-#define MACRO_GET_HB_OR_FAIL() \
-  if (ptr == NULL) { \
-    return -1; \
-  } \
-  heartbeat_acc_pow_context* hb = (heartbeat_acc_pow_context*) (*env)->GetDirectBufferAddress(env, ptr); \
-  if (hb == NULL) { \
-    return -1; \
+#define MACRO_GET_HB() \
+  heartbeat_acc_pow_context* hb = NULL; \
+  if (ptr != NULL) { \
+    hb = (heartbeat_acc_pow_context*) (*env)->GetDirectBufferAddress(env, ptr); \
   }
 
 /**
@@ -49,7 +46,7 @@ JNIEXPORT jobject JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatAccPowJNI_hea
 /**
  * Issue a heartbeat.
  */
-JNIEXPORT jint JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatAccPowJNI_heartbeatAccPow(JNIEnv* env,
+JNIEXPORT void JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatAccPowJNI_heartbeatAccPow(JNIEnv* env,
                                                                                           jobject obj,
                                                                                           jobject ptr,
                                                                                           jlong user_tag,
@@ -59,9 +56,8 @@ JNIEXPORT jint JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatAccPowJNI_heartb
                                                                                           jlong accuracy,
                                                                                           jlong start_energy,
                                                                                           jlong end_energy) {
-  MACRO_GET_HB_OR_FAIL();
+  MACRO_GET_HB();
   heartbeat_acc_pow(hb, user_tag, work, start_time, end_time, accuracy, start_energy, end_energy);
-  return 0;
 }
 
 /**
@@ -71,7 +67,10 @@ JNIEXPORT jint JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatAccPowJNI_heartb
 JNIEXPORT jint JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatAccPowJNI_heartbeatAccPowFinish(JNIEnv* env,
                                                                                                 jobject obj,
                                                                                                 jobject ptr) {
-  MACRO_GET_HB_OR_FAIL();
+  MACRO_GET_HB();
+  if (hb == NULL) {
+    return -1;
+  }
   free(hb->window_buffer);
   free(hb);
   return 0;
@@ -87,139 +86,139 @@ JNIEXPORT jint JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatAccPowJNI_heartb
                                                                                                          jobject obj,
                                                                                                          jobject ptr,
                                                                                                          jint fd) {
-  MACRO_GET_HB_OR_FAIL();
+  MACRO_GET_HB();
   return hb_acc_pow_log_window_buffer(hb, fd);
 }
 
 JNIEXPORT jlong JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatAccPowJNI_heartbeatAccPowGetWindowSize(JNIEnv* env,
                                                                                                         jobject obj,
                                                                                                         jobject ptr) {
-  MACRO_GET_HB_OR_FAIL();
+  MACRO_GET_HB();
   return hb_acc_pow_get_window_size(hb);
 }
 
 JNIEXPORT jlong JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatAccPowJNI_heartbeatAccPowGetUserTag(JNIEnv* env,
                                                                                                      jobject obj,
                                                                                                      jobject ptr) {
-  MACRO_GET_HB_OR_FAIL();
+  MACRO_GET_HB();
   return hb_acc_pow_get_user_tag(hb);
 }
 
 JNIEXPORT jlong JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatAccPowJNI_heartbeatAccPowGetGlobalTime(JNIEnv* env,
                                                                                                         jobject obj,
                                                                                                         jobject ptr) {
-  MACRO_GET_HB_OR_FAIL();
+  MACRO_GET_HB();
   return hb_acc_pow_get_global_time(hb);
 }
 
 JNIEXPORT jlong JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatAccPowJNI_heartbeatAccPowGetWindowTime(JNIEnv* env,
                                                                                                         jobject obj,
                                                                                                         jobject ptr) {
-  MACRO_GET_HB_OR_FAIL();
+  MACRO_GET_HB();
   return hb_acc_pow_get_window_time(hb);
 }
 
 JNIEXPORT jlong JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatAccPowJNI_heartbeatAccPowGetGlobalWork(JNIEnv* env,
                                                                                                         jobject obj,
                                                                                                         jobject ptr) {
-  MACRO_GET_HB_OR_FAIL();
+  MACRO_GET_HB();
   return hb_acc_pow_get_global_work(hb);
 }
 
 JNIEXPORT jlong JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatAccPowJNI_heartbeatAccPowGetWindowWork(JNIEnv* env,
                                                                                                         jobject obj,
                                                                                                         jobject ptr) {
-  MACRO_GET_HB_OR_FAIL();
+  MACRO_GET_HB();
   return hb_acc_pow_get_window_work(hb);
 }
 
 JNIEXPORT jdouble JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatAccPowJNI_heartbeatAccPowGetGlobalPerf(JNIEnv* env,
                                                                                                           jobject obj,
                                                                                                           jobject ptr) {
-  MACRO_GET_HB_OR_FAIL();
+  MACRO_GET_HB();
   return hb_acc_pow_get_global_perf(hb);
 }
 
 JNIEXPORT jdouble JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatAccPowJNI_heartbeatAccPowGetWindowPerf(JNIEnv* env,
                                                                                                           jobject obj,
                                                                                                           jobject ptr) {
-  MACRO_GET_HB_OR_FAIL();
+  MACRO_GET_HB();
   return hb_acc_pow_get_window_perf(hb);
 }
 
 JNIEXPORT jdouble JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatAccPowJNI_heartbeatAccPowGetInstantPerf(JNIEnv* env,
                                                                                                            jobject obj,
                                                                                                            jobject ptr) {
-  MACRO_GET_HB_OR_FAIL();
+  MACRO_GET_HB();
   return hb_acc_pow_get_instant_perf(hb);
 }
 
 JNIEXPORT jlong JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatAccPowJNI_heartbeatAccPowGetGlobalAccuracy(JNIEnv* env,
                                                                                                             jobject obj,
                                                                                                             jobject ptr) {
-  MACRO_GET_HB_OR_FAIL();
+  MACRO_GET_HB();
   return hb_acc_pow_get_global_accuracy(hb);
 }
 
 JNIEXPORT jlong JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatAccPowJNI_heartbeatAccPowGetWindowAccuracy(JNIEnv* env,
                                                                                                             jobject obj,
                                                                                                             jobject ptr) {
-  MACRO_GET_HB_OR_FAIL();
+  MACRO_GET_HB();
   return hb_acc_pow_get_window_accuracy(hb);
 }
 
 JNIEXPORT jdouble JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatAccPowJNI_heartbeatAccPowGetGlobalAccuracyRate(JNIEnv* env,
                                                                                                                   jobject obj,
                                                                                                                   jobject ptr) {
-  MACRO_GET_HB_OR_FAIL();
+  MACRO_GET_HB();
   return hb_acc_pow_get_global_accuracy_rate(hb);
 }
 
 JNIEXPORT jdouble JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatAccPowJNI_heartbeatAccPowGetWindowAccuracyRate(JNIEnv* env,
                                                                                                                   jobject obj,
                                                                                                                   jobject ptr) {
-  MACRO_GET_HB_OR_FAIL();
+  MACRO_GET_HB();
   return hb_acc_pow_get_window_accuracy_rate(hb);
 }
 
 JNIEXPORT jdouble JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatAccPowJNI_heartbeatAccPowGetInstantAccuracyRate(JNIEnv* env,
                                                                                                                    jobject obj,
                                                                                                                    jobject ptr) {
-  MACRO_GET_HB_OR_FAIL();
+  MACRO_GET_HB();
   return hb_acc_pow_get_instant_accuracy_rate(hb);
 }
 
 JNIEXPORT jlong JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatAccPowJNI_heartbeatAccPowGetGlobalEnergy(JNIEnv* env,
                                                                                                           jobject obj,
                                                                                                           jobject ptr) {
-  MACRO_GET_HB_OR_FAIL();
+  MACRO_GET_HB();
   return hb_acc_pow_get_global_energy(hb);
 }
 
 JNIEXPORT jlong JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatAccPowJNI_heartbeatAccPowGetWindowEnergy(JNIEnv* env,
                                                                                                           jobject obj,
                                                                                                           jobject ptr) {
-  MACRO_GET_HB_OR_FAIL();
+  MACRO_GET_HB();
   return hb_acc_pow_get_window_energy(hb);
 }
 
 JNIEXPORT jdouble JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatAccPowJNI_heartbeatAccPowGetGlobalPower(JNIEnv* env,
                                                                                                            jobject obj,
                                                                                                            jobject ptr) {
-  MACRO_GET_HB_OR_FAIL();
+  MACRO_GET_HB();
   return hb_acc_pow_get_global_power(hb);
 }
 
 JNIEXPORT jdouble JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatAccPowJNI_heartbeatAccPowGetWindowPower(JNIEnv* env,
                                                                                                            jobject obj,
                                                                                                            jobject ptr) {
-  MACRO_GET_HB_OR_FAIL();
+  MACRO_GET_HB();
   return hb_acc_pow_get_window_power(hb);
 }
 
 JNIEXPORT jdouble JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatAccPowJNI_heartbeatAccPowGetInstantPower(JNIEnv* env,
                                                                                                             jobject obj,
                                                                                                             jobject ptr) {
-  MACRO_GET_HB_OR_FAIL();
+  MACRO_GET_HB();
   return hb_acc_pow_get_instant_power(hb);
 }

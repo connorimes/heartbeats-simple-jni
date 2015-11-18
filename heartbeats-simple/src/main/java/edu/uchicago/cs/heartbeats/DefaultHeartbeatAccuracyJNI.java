@@ -36,9 +36,7 @@ public class DefaultHeartbeatAccuracyJNI extends AbstractDefaultHeartbeatJNI imp
 			final long accuracy) {
 		enforceNotFinished();
 		// TODO: enforce that values are unsigned.
-		if (HeartbeatAccJNI.get().heartbeatAcc(nativePtr, userTag, work, startTime, endTime, accuracy) != 0) {
-			throw new IllegalArgumentException("Failed to issue heartbeat");
-		}
+		HeartbeatAccJNI.get().heartbeatAcc(nativePtr, userTag, work, startTime, endTime, accuracy);
 	}
 
 	public void heartbeat(final long userTag, final long work, final long startTime, final long endTime) {

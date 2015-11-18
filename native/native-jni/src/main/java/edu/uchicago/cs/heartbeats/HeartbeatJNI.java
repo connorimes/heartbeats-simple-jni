@@ -27,7 +27,7 @@ public final class HeartbeatJNI {
 
 	public native ByteBuffer heartbeatInit(int window_size);
 
-	public native int heartbeat(ByteBuffer ptr, long userTag, long work, long startTime, long endTime);
+	public native void heartbeat(ByteBuffer ptr, long userTag, long work, long startTime, long endTime);
 
 	public native int heartbeatFinish(ByteBuffer ptr);
 

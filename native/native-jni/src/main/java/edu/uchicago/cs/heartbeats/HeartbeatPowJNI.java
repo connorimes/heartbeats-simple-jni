@@ -27,7 +27,7 @@ public final class HeartbeatPowJNI {
 
 	public native ByteBuffer heartbeatPowInit(int window_size);
 
-	public native int heartbeatPow(ByteBuffer ptr, long userTag, long work, long startTime, long endTime,
+	public native void heartbeatPow(ByteBuffer ptr, long userTag, long work, long startTime, long endTime,
 			long start_energy, long end_energy);
 
 	public native int heartbeatPowFinish(ByteBuffer ptr);

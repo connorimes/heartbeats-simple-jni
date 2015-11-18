@@ -36,10 +36,7 @@ public class DefaultHeartbeatPowerJNI extends AbstractDefaultHeartbeatJNI implem
 			final long startEnergy, final long endEnergy) {
 		enforceNotFinished();
 		// TODO: enforce that values are unsigned.
-		if (HeartbeatPowJNI.get().heartbeatPow(nativePtr, userTag, work, startTime, endTime, startEnergy,
-				endEnergy) != 0) {
-			throw new IllegalArgumentException("Failed to issue heartbeat");
-		}
+		HeartbeatPowJNI.get().heartbeatPow(nativePtr, userTag, work, startTime, endTime, startEnergy, endEnergy);
 	}
 
 	public void heartbeat(final long userTag, final long work, final long startTime, final long endTime) {

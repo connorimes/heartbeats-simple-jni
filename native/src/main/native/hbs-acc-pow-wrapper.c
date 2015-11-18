@@ -175,7 +175,7 @@ JNIEXPORT jdouble JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatAccPowJNI_hea
   return hb_acc_pow_get_global_accuracy_rate(hb);
 }
 
-      JNIEXPORT jdouble JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatAccPowJNI_heartbeatAccPowGetWindowAccuracyRate(JNIEnv* env,
+JNIEXPORT jdouble JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatAccPowJNI_heartbeatAccPowGetWindowAccuracyRate(JNIEnv* env,
                                                                                                                   jobject obj,
                                                                                                                   jobject ptr) {
   MACRO_GET_HB_OR_FAIL();

@@ -24,8 +24,8 @@
  * Returns a pointer to the heartbeat, or NULL on failure.
  */
 JNIEXPORT jobject JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatJNI_heartbeatInit(JNIEnv* env,
-                                                                                        jobject obj,
-                                                                                        jint window_size) {
+                                                                                     jobject obj,
+                                                                                     jint window_size) {
   if (window_size <= 0) {
     return NULL;
   }
@@ -49,13 +49,13 @@ JNIEXPORT jobject JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatJNI_heartbeat
 /**
  * Issue a heartbeat.
  */
-JNIEXPORT int JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatJNI_heartbeat(JNIEnv* env,
-                                                                                jobject obj,
-                                                                                jobject ptr,
-                                                                                jlong user_tag,
-                                                                                jlong work,
-                                                                                jlong start_time,
-                                                                                jlong end_time) {
+JNIEXPORT jint JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatJNI_heartbeat(JNIEnv* env,
+                                                                              jobject obj,
+                                                                              jobject ptr,
+                                                                              jlong user_tag,
+                                                                              jlong work,
+                                                                              jlong start_time,
+                                                                              jlong end_time) {
   MACRO_GET_HB_OR_FAIL();
   heartbeat(hb, user_tag, work, start_time, end_time);
   return 0;

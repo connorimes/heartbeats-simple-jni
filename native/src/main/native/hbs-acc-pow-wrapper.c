@@ -49,16 +49,16 @@ JNIEXPORT jobject JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatAccPowJNI_hea
 /**
  * Issue a heartbeat.
  */
-JNIEXPORT int JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatAccPowJNI_heartbeatAccPow(JNIEnv* env,
-                                                                                         jobject obj,
-                                                                                         jobject ptr,
-                                                                                         jlong user_tag,
-                                                                                         jlong work,
-                                                                                         jlong start_time,
-                                                                                         jlong end_time,
-                                                                                         jlong accuracy,
-                                                                                         jlong start_energy,
-                                                                                         jlong end_energy) {
+JNIEXPORT jint JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatAccPowJNI_heartbeatAccPow(JNIEnv* env,
+                                                                                          jobject obj,
+                                                                                          jobject ptr,
+                                                                                          jlong user_tag,
+                                                                                          jlong work,
+                                                                                          jlong start_time,
+                                                                                          jlong end_time,
+                                                                                          jlong accuracy,
+                                                                                          jlong start_energy,
+                                                                                          jlong end_energy) {
   MACRO_GET_HB_OR_FAIL();
   heartbeat_acc_pow(hb, user_tag, work, start_time, end_time, accuracy, start_energy, end_energy);
   return 0;

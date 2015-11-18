@@ -49,14 +49,14 @@ JNIEXPORT jobject JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatAccJNI_heartb
 /**
  * Issue a heartbeat.
  */
-JNIEXPORT int JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatAccJNI_heartbeatAcc(JNIEnv* env,
-                                                                                   jobject obj,
-                                                                                   jobject ptr,
-                                                                                   jlong user_tag,
-                                                                                   jlong work,
-                                                                                   jlong start_time,
-                                                                                   jlong end_time,
-                                                                                   jlong accuracy) {
+JNIEXPORT jint JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatAccJNI_heartbeatAcc(JNIEnv* env,
+                                                                                    jobject obj,
+                                                                                    jobject ptr,
+                                                                                    jlong user_tag,
+                                                                                    jlong work,
+                                                                                    jlong start_time,
+                                                                                    jlong end_time,
+                                                                                    jlong accuracy) {
   MACRO_GET_HB_OR_FAIL();
   heartbeat_acc(hb, user_tag, work, start_time, end_time, accuracy);
   return 0;

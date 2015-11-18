@@ -30,7 +30,7 @@ public final class HeartbeatAccJNI {
 	public native void heartbeatAcc(ByteBuffer ptr, long userTag, long work, long startTime, long endTime,
 			long accuracy);
 
-	public native int heartbeatAccFinish(ByteBuffer ptr);
+	public native void heartbeatAccFinish(ByteBuffer ptr);
 
 	public native int heartbeatAccLogHeader(int fd);
 

@@ -52,13 +52,13 @@ public class DefaultHeartbeatAccuracyJNITest {
 		assertTrue("getGlobalAccuracyRate", hb.getGlobalAccuracyRate() > 0);
 		assertTrue("getWindowAccuracyRate", hb.getWindowAccuracyRate() > 0);
 		assertTrue("getInstantAccuracyRate", hb.getInstantAccuracyRate() > 0);
-		assertEquals("finish", 0, hb.finish());
+		hb.finish();
 	}
 
 	@Test(expected = IllegalStateException.class)
 	public void test_access_after_finish() {
 		HeartbeatAccuracy hb = new DefaultHeartbeatAccuracyJNI(WINDOW_SIZE);
-		assertEquals("finish", 0, hb.finish());
+		hb.finish();
 		// too cumbersome to try all methods, just do one
 		hb.getWindowSize();
 	}

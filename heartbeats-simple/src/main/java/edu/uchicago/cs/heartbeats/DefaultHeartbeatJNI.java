@@ -38,11 +38,10 @@ public class DefaultHeartbeatJNI extends AbstractDefaultHeartbeatJNI implements 
 		HeartbeatJNI.get().heartbeat(nativePtr, userTag, work, startTime, endTime);
 	}
 
-	public int finish() {
+	public void finish() {
 		enforceNotFinished();
-		int result = HeartbeatJNI.get().heartbeatFinish(nativePtr);
+		HeartbeatJNI.get().heartbeatFinish(nativePtr);
 		nativePtr = null;
-		return result;
 	}
 
 	public void logHeader(final FileOutputStream fos) throws IOException {

@@ -52,13 +52,13 @@ public class DefaultHeartbeatPowerJNITest {
 		assertTrue("getGlobalPower", hb.getGlobalPower() > 0);
 		assertTrue("getWindowPower", hb.getWindowPower() > 0);
 		assertTrue("getInstantPower", hb.getInstantPower() > 0);
-		assertEquals("finish", 0, hb.finish());
+		hb.finish();
 	}
 
 	@Test(expected = IllegalStateException.class)
 	public void test_access_after_finish() {
 		HeartbeatPower hb = new DefaultHeartbeatPowerJNI(WINDOW_SIZE);
-		assertEquals("finish", 0, hb.finish());
+		hb.finish();
 		// too cumbersome to try all methods, just do one
 		hb.getWindowSize();
 	}

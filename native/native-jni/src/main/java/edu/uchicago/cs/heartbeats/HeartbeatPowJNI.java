@@ -30,7 +30,7 @@ public final class HeartbeatPowJNI {
 	public native void heartbeatPow(ByteBuffer ptr, long userTag, long work, long startTime, long endTime,
 			long start_energy, long end_energy);
 
-	public native int heartbeatPowFinish(ByteBuffer ptr);
+	public native void heartbeatPowFinish(ByteBuffer ptr);
 
 	public native int heartbeatPowLogHeader(int fd);
 

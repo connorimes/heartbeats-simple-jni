@@ -43,11 +43,10 @@ public class DefaultHeartbeatPowerJNI extends AbstractDefaultHeartbeatJNI implem
 		heartbeat(userTag, work, startTime, endTime, 0, 0);
 	}
 
-	public int finish() {
+	public void finish() {
 		enforceNotFinished();
-		int result = HeartbeatPowJNI.get().heartbeatPowFinish(nativePtr);
+		HeartbeatJNI.get().heartbeatFinish(nativePtr);
 		nativePtr = null;
-		return result;
 	}
 
 	public void logHeader(final FileOutputStream fos) throws IOException {

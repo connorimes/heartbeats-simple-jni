@@ -29,7 +29,7 @@ public final class HeartbeatJNI {
 
 	public native void heartbeat(ByteBuffer ptr, long userTag, long work, long startTime, long endTime);
 
-	public native int heartbeatFinish(ByteBuffer ptr);
+	public native void heartbeatFinish(ByteBuffer ptr);
 
 	public native int heartbeatLogHeader(int fd);
 

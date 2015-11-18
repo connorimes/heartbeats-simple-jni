@@ -63,16 +63,14 @@ JNIEXPORT void JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatPowJNI_heartbeat
  * Cleanup the heartbeat specified by the provided pointer.
  * Returns 0 on success or failure code otherwise.
  */
-JNIEXPORT jint JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatPowJNI_heartbeatPowFinish(JNIEnv* env,
+JNIEXPORT void JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatPowJNI_heartbeatPowFinish(JNIEnv* env,
                                                                                           jobject obj,
                                                                                           jobject ptr) {
   MACRO_GET_HB();
-  if (hb == NULL) {
-    return -1;
+  if (hb != NULL) {
+    free(hb->window_buffer);
+    free(hb);
   }
-  free(hb->window_buffer);
-  free(hb);
-  return 0;
 }
 
 JNIEXPORT jint JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatPowJNI_heartbeatPowLogHeader(JNIEnv* env,

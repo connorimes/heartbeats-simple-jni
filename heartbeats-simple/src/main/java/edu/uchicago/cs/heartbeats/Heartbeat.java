@@ -28,11 +28,10 @@ public interface Heartbeat {
 	/**
 	 * Free memory allocations, etc.
 	 * 
-	 * @return 0 on success, failure code otherwise
 	 * @throws IllegalStateException
 	 *             if already finished
 	 */
-	int finish();
+	void finish();
 
 	/**
 	 * Write the header text to a log file.
@@ -46,6 +45,8 @@ public interface Heartbeat {
 	 * Logs the circular window buffer up to the current read index.
 	 *
 	 * @param fos
+	 * @throws IllegalStateException
+	 *             if already finished
 	 * @throws IOException
 	 */
 	void logWindowBuffer(FileOutputStream fos) throws IOException;

@@ -21,6 +21,7 @@
   <modules>
     <module>native</module>
     <module>heartbeats-simple</module>
+    <module>test</module>
   </modules>
 
   <scm>
@@ -67,6 +68,11 @@
         <groupId>edu.uchicago.cs.heartbeats</groupId>
         <artifactId>libhbs-acc-pow-wrapper</artifactId>
         <type>so</type>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>edu.uchicago.cs.heartbeats</groupId>
+        <artifactId>heartbeats-simple</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>

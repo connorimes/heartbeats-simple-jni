@@ -1,5 +1,8 @@
 package edu.uchicago.cs.heartbeats;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 /**
  * Abstraction for Heartbeat implementation over JNI.
  * 
@@ -34,18 +37,18 @@ public interface Heartbeat {
 	/**
 	 * Write the header text to a log file.
 	 *
-	 * @param fd
-	 * @return 0 on success, error code otherwise
+	 * @param fos
+	 * @throws IOException
 	 */
-	// int logHeader(int fd);
+	void logHeader(FileOutputStream fos) throws IOException;
 
 	/**
 	 * Logs the circular window buffer up to the current read index.
 	 *
-	 * @param fd
-	 * @return 0 on success, error code otherwise
+	 * @param fos
+	 * @throws IOException
 	 */
-	// int logwindowBuffer(int fd);
+	void logWindowBuffer(FileOutputStream fos) throws IOException;
 
 	/**
 	 * Returns the size of the sliding window used to compute the current heart

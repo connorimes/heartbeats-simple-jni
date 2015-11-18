@@ -1,6 +1,7 @@
 package edu.uchicago.cs.heartbeats;
 
-import java.nio.ByteBuffer;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  * Gets a heartbeat implementation and exposes methods for performing operations
@@ -15,8 +16,7 @@ import java.nio.ByteBuffer;
  * 
  * @author Connor Imes
  */
-public class DefaultHeartbeatAccuracyJNI implements HeartbeatAccuracy {
-	private volatile ByteBuffer nativePtr;
+public class DefaultHeartbeatAccuracyJNI extends AbstractDefaultHeartbeatJNI implements HeartbeatAccuracy {
 
 	/**
 	 * Create a {@link DefaultHeartbeatAccuracyJNI}.
@@ -52,9 +52,18 @@ public class DefaultHeartbeatAccuracyJNI implements HeartbeatAccuracy {
 		return result;
 	}
 
-	// public int logHeader(int fd);
+	public void logHeader(final FileOutputStream fos) throws IOException {
+		if (HeartbeatJNI.get().heartbeatLogHeader(getFileDescriptor(fos)) != 0) {
+			throw new IOException("Failed to write log header");
+		}
+	}
 
-	// public int logwindowBuffer(int fd);
+	public void logWindowBuffer(final FileOutputStream fos) throws IOException {
+		enforceNotFinished();
+		if (HeartbeatJNI.get().heartbeatLogWindowBuffer(nativePtr, getFileDescriptor(fos)) != 0) {
+			throw new IOException("Failed to write window buffer");
+		}
+	}
 
 	public long getWindowSize() {
 		enforceNotFinished();
@@ -124,12 +133,6 @@ public class DefaultHeartbeatAccuracyJNI implements HeartbeatAccuracy {
 	public double getInstantAccuracyRate() {
 		enforceNotFinished();
 		return HeartbeatAccJNI.get().heartbeatAccGetInstantAccuracyRate(nativePtr);
-	}
-
-	private void enforceNotFinished() {
-		if (nativePtr == null) {
-			throw new IllegalStateException("Already finished");
-		}
 	}
 
 }

@@ -1,6 +1,7 @@
 package edu.uchicago.cs.heartbeats;
 
-import java.nio.ByteBuffer;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  * Gets a heartbeat implementation and exposes methods for performing operations
@@ -15,8 +16,7 @@ import java.nio.ByteBuffer;
  * 
  * @author Connor Imes
  */
-public class DefaultHeartbeatJNI implements Heartbeat {
-	private volatile ByteBuffer nativePtr;
+public class DefaultHeartbeatJNI extends AbstractDefaultHeartbeatJNI implements Heartbeat {
 
 	/**
 	 * Create a {@link DefaultHeartbeatJNI}.
@@ -47,9 +47,18 @@ public class DefaultHeartbeatJNI implements Heartbeat {
 		return result;
 	}
 
-	// public int logHeader(int fd);
+	public void logHeader(final FileOutputStream fos) throws IOException {
+		if (HeartbeatJNI.get().heartbeatLogHeader(getFileDescriptor(fos)) != 0) {
+			throw new IOException("Failed to write log header");
+		}
+	}
 
-	// public int logwindowBuffer(int fd);
+	public void logWindowBuffer(final FileOutputStream fos) throws IOException {
+		enforceNotFinished();
+		if (HeartbeatJNI.get().heartbeatLogWindowBuffer(nativePtr, getFileDescriptor(fos)) != 0) {
+			throw new IOException("Failed to write window buffer");
+		}
+	}
 
 	public long getWindowSize() {
 		enforceNotFinished();
@@ -94,12 +103,6 @@ public class DefaultHeartbeatJNI implements Heartbeat {
 	public double getInstantPerf() {
 		enforceNotFinished();
 		return HeartbeatJNI.get().heartbeatGetInstantPerf(nativePtr);
-	}
-
-	private void enforceNotFinished() {
-		if (nativePtr == null) {
-			throw new IllegalStateException("Already finished");
-		}
 	}
 
 }

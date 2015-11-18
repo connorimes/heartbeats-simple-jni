@@ -2,6 +2,10 @@ package edu.uchicago.cs.heartbeats;
 
 import static org.junit.Assert.*;
 
+import java.io.FileDescriptor;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 import org.junit.Test;
 
 /**
@@ -25,6 +29,19 @@ public class DefaultHeartbeatJNITest {
 		assertEquals("getWindowTime", endTime, hb.getWindowTime());
 		assertEquals("getGlobalWork", work, hb.getGlobalWork());
 		assertEquals("getWindowWork", work, hb.getWindowWork());
+		FileOutputStream fos = new FileOutputStream(FileDescriptor.out);
+		try {
+			hb.logHeader(fos);
+		} catch (IOException e) {
+			e.printStackTrace();
+			fail("IOException logging header");
+		}
+		try {
+			hb.logWindowBuffer(fos);
+		} catch (IOException e) {
+			e.printStackTrace();
+			fail("IOException logging window buffer");
+		}
 		// double values are hard to test - just verify the methods don't fail
 		assertTrue("getGlobalPerf", hb.getGlobalPerf() > 0);
 		assertTrue("getWindowPerf", hb.getWindowPerf() > 0);

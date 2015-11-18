@@ -1,6 +1,5 @@
 package edu.uchicago.cs.heartbeats;
 
-import java.math.BigInteger;
 import java.nio.ByteBuffer;
 
 /**
@@ -23,7 +22,6 @@ public class DefaultHeartbeatJNI implements Heartbeat {
 	 * Create a {@link DefaultHeartbeatJNI}.
 	 * 
 	 * @param windowSize
-	 * 
 	 * @throws IllegalStateException
 	 *             if native resources cannot be allocated
 	 */
@@ -34,10 +32,8 @@ public class DefaultHeartbeatJNI implements Heartbeat {
 		}
 	}
 
-	public void heartbeat(long userTag, long work, long startTime, long endTime) {
-		if (nativePtr == null) {
-			throw new IllegalStateException("Already finished");
-		}
+	public void heartbeat(final long userTag, final long work, final long startTime, final long endTime) {
+		enforceNotFinished();
 		// TODO: enforce that values are unsigned.
 		if (HeartbeatJNI.get().heartbeat(nativePtr, userTag, work, startTime, endTime) != 0) {
 			throw new IllegalArgumentException("Failed to issue heartbeat");
@@ -45,9 +41,7 @@ public class DefaultHeartbeatJNI implements Heartbeat {
 	}
 
 	public int finish() {
-		if (nativePtr == null) {
-			throw new IllegalStateException("Already finished");
-		}
+		enforceNotFinished();
 		int result = HeartbeatJNI.get().heartbeatFinish(nativePtr);
 		nativePtr = null;
 		return result;
@@ -58,48 +52,54 @@ public class DefaultHeartbeatJNI implements Heartbeat {
 	// public int logwindowBuffer(int fd);
 
 	public long getWindowSize() {
-		// TODO
-		return 0;
+		enforceNotFinished();
+		return HeartbeatJNI.get().heartbeatGetWindowSize(nativePtr);
 	}
 
 	public long getUserTag() {
-		// TODO
-		return 0;
+		enforceNotFinished();
+		return HeartbeatJNI.get().heartbeatGetUserTag(nativePtr);
 	}
 
 	public long getGlobalTime() {
-		// TODO
-		return 0;
+		enforceNotFinished();
+		return HeartbeatJNI.get().heartbeatGetGlobalTime(nativePtr);
 	}
 
 	public long getWindowTime() {
-		// TODO
-		return 0;
+		enforceNotFinished();
+		return HeartbeatJNI.get().heartbeatGetWindowTime(nativePtr);
 	}
 
 	public long getGlobalWork() {
-		// TODO
-		return 0;
+		enforceNotFinished();
+		return HeartbeatJNI.get().heartbeatGetGlobalWork(nativePtr);
 	}
 
 	public long getWindowWork() {
-		// TODO
-		return 0;
+		enforceNotFinished();
+		return HeartbeatJNI.get().heartbeatGetWindowWork(nativePtr);
 	}
 
 	public double getGlobalPerf() {
-		// TODO
-		return 0;
+		enforceNotFinished();
+		return HeartbeatJNI.get().heartbeatGetGlobalPerf(nativePtr);
 	}
 
 	public double getWindowPerf() {
-		// TODO
-		return 0;
+		enforceNotFinished();
+		return HeartbeatJNI.get().heartbeatGetWindowPerf(nativePtr);
 	}
 
 	public double getInstantPerf() {
-		// TODO
-		return 0;
+		enforceNotFinished();
+		return HeartbeatJNI.get().heartbeatGetInstantPerf(nativePtr);
+	}
+
+	private void enforceNotFinished() {
+		if (nativePtr == null) {
+			throw new IllegalStateException("Already finished");
+		}
 	}
 
 }

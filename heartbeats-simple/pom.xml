@@ -7,7 +7,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <relativePath>..</relativePath>
   </parent>
-  <artifactId>hbs</artifactId>
+  <artifactId>heartbeats-simple</artifactId>
   <name>Heartbeats-Simple Java Bindings</name>
 
   <dependencies>
@@ -18,6 +18,24 @@
     <dependency>
       <groupId>edu.uchicago.cs.heartbeats</groupId>
       <artifactId>libhbs-wrapper</artifactId>
+      <type>so</type>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>edu.uchicago.cs.heartbeats</groupId>
+      <artifactId>libhbs-acc-wrapper</artifactId>
+      <type>so</type>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>edu.uchicago.cs.heartbeats</groupId>
+      <artifactId>libhbs-pow-wrapper</artifactId>
+      <type>so</type>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>edu.uchicago.cs.heartbeats</groupId>
+      <artifactId>libhbs-acc-pow-wrapper</artifactId>
       <type>so</type>
       <scope>runtime</scope>
     </dependency>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>heartbeats-simple-native-linux-parent</artifactId>
+    <groupId>edu.uchicago.cs.heartbeats</groupId>
+    <version>0.0.1-SNAPSHOT</version>
+    <relativePath>..</relativePath>
+  </parent>
+
+  <artifactId>libhbs-acc-pow-wrapper</artifactId>
+  <name>Heartbeats-Simple-Accuracy-Power Native Linux</name>
+  <packaging>so</packaging>
+
+  <properties>
+    <LDFLAGS></LDFLAGS>
+    <CFLAGS>-I/usr/local/include/heartbeats-simple</CFLAGS>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>edu.uchicago.cs.heartbeats</groupId>
+      <artifactId>heartbeats-simple-native-jni</artifactId>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>native-maven-plugin</artifactId>
+        <extensions>true</extensions>
+        <configuration>
+          <!-- trigger javah -->
+          <javahOS>linux</javahOS>
+          <sources>
+            <source>
+              <directory>${basedir}/../../src/main/native</directory>
+              <fileNames>
+                <fileName>hbs-acc-pow-wrapper.c</fileName>
+              </fileNames>
+            </source>
+          </sources>
+          <compilerStartOptions>
+            <compilerStartOption>-fPIC</compilerStartOption>
+            <compilerStartOption>-Wall</compilerStartOption>
+            <compilerStartOption>-Wno-unknown-pragmas</compilerStartOption>
+            <compilerStartOption>${CFLAGS}</compilerStartOption>
+          </compilerStartOptions>
+          <linkerStartOptions>
+            <linkerStartOption>-shared</linkerStartOption>
+          </linkerStartOptions>
+          <linkerEndOptions>
+            <linkerEndOption>${LDFLAGS}</linkerEndOption>
+            <linkerEndOption>-lhbs-acc-pow</linkerEndOption>
+          </linkerEndOptions>
+        </configuration>
+        <executions>
+          <execution>
+            <id>javah</id>
+            <phase>generate-sources</phase>
+            <configuration>
+              <javahOS>linux</javahOS>
+              <javahProvider>default</javahProvider>
+              <javahOutputDirectory>${project.build.directory}/custom-javah</javahOutputDirectory>
+              <workingDirectory>${basedir}</workingDirectory>
+              <javahOutputFileName>hbs-acc-pow-wrapper.h</javahOutputFileName>
+              <javahClassNames>
+                <javahClassName>edu.uchicago.cs.heartbeats.HeartbeatAccPowJNI</javahClassName>
+              </javahClassNames>
+            </configuration>
+            <goals>
+              <goal>javah</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

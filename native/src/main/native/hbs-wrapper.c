@@ -7,20 +7,27 @@
 
 #include <stdlib.h>
 #include <jni.h>
-// native lib headers
 #include <heartbeat.h>
-// auto-generated header
 #include <hbs-wrapper.h>
+
+#define MACRO_GET_HB_OR_FAIL() \
+  if (ptr == NULL) { \
+    return -1; \
+  } \
+  heartbeat_context* hb = (heartbeat_context*) (*env)->GetDirectBufferAddress(env, ptr); \
+  if (hb == NULL) { \
+    return -1; \
+  }
 
 /**
  * Allocate memory and get the heartbeat.
  * Returns a pointer to the heartbeat, or NULL on failure.
  */
 JNIEXPORT jobject JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatJNI_heartbeatInit(JNIEnv* env,
-                                                                                     jobject obj,
-                                                                                     jint window_size) {
+                                                                                        jobject obj,
+                                                                                        jint window_size) {
   if (window_size <= 0) {
-  	return NULL;
+    return NULL;
   }
   heartbeat_context* hb = malloc(sizeof(heartbeat_context));
   if (hb == NULL) {
@@ -28,8 +35,8 @@ JNIEXPORT jobject JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatJNI_heartbeat
   }
   heartbeat_record* hbr = malloc(window_size * sizeof(heartbeat_record));
   if (hbr == NULL) {
-  	free(hb);
-  	return NULL;
+    free(hb);
+    return NULL;
   }
   if (heartbeat_init(hb, window_size, hbr, NULL)) {
     free(hbr);
@@ -43,19 +50,13 @@ JNIEXPORT jobject JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatJNI_heartbeat
  * Issue a heartbeat.
  */
 JNIEXPORT int JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatJNI_heartbeat(JNIEnv* env,
-                                                                             jobject obj,
-                                                                             jobject ptr,
-                                                                             jlong user_tag,
-                                                                             jlong work,
-                                                                             jlong start_time,
-                                                                             jlong end_time) {
-  if (ptr == NULL) {
-    return -1;
-  }
-  heartbeat_context* hb = (heartbeat_context*) (*env)->GetDirectBufferAddress(env, ptr);
-  if (hb == NULL) {
-    return -1;
-  }
+                                                                                jobject obj,
+                                                                                jobject ptr,
+                                                                                jlong user_tag,
+                                                                                jlong work,
+                                                                                jlong start_time,
+                                                                                jlong end_time) {
+  MACRO_GET_HB_OR_FAIL();
   heartbeat(hb, user_tag, work, start_time, end_time);
   return 0;
 }
@@ -67,131 +68,85 @@ JNIEXPORT int JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatJNI_heartbeat(JNI
 JNIEXPORT jint JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatJNI_heartbeatFinish(JNIEnv* env,
                                                                                     jobject obj,
                                                                                     jobject ptr) {
-  if (ptr == NULL) {
-    return -1;
-  }
-  heartbeat_context* hb = (heartbeat_context*) (*env)->GetDirectBufferAddress(env, ptr);
-  if (hb == NULL) {
-    return -1;
-  }
+  MACRO_GET_HB_OR_FAIL();
   free(hb->window_buffer);
   free(hb);
   return 0;
 }
 
+JNIEXPORT jint JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatJNI_heartbeatLogHeader(JNIEnv* env,
+                                                                                       jobject obj,
+                                                                                       jint fd) {
+  return hb_log_header(fd);
+}
+
+JNIEXPORT jint JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatJNI_heartbeatLogWindowBuffer(JNIEnv* env,
+                                                                                             jobject obj,
+                                                                                             jobject ptr,
+                                                                                             jint fd) {
+  MACRO_GET_HB_OR_FAIL();
+  return hb_log_window_buffer(hb, fd);
+}
+
 JNIEXPORT jlong JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatJNI_heartbeatGetWindowSize(JNIEnv* env,
                                                                                             jobject obj,
                                                                                             jobject ptr) {
-  if (ptr == NULL) {
-    return -1;
-  }
-  heartbeat_context* hb = (heartbeat_context*) (*env)->GetDirectBufferAddress(env, ptr);
-  if (hb == NULL) {
-    return -1;
-  }
+  MACRO_GET_HB_OR_FAIL();
   return hb_get_window_size(hb);
 }
 
 JNIEXPORT jlong JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatJNI_heartbeatGetUserTag(JNIEnv* env,
                                                                                          jobject obj,
                                                                                          jobject ptr) {
-  if (ptr == NULL) {
-    return -1;
-  }
-  heartbeat_context* hb = (heartbeat_context*) (*env)->GetDirectBufferAddress(env, ptr);
-  if (hb == NULL) {
-    return -1;
-  }
+  MACRO_GET_HB_OR_FAIL();
   return hb_get_user_tag(hb);
 }
 
 JNIEXPORT jlong JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatJNI_heartbeatGetGlobalTime(JNIEnv* env,
                                                                                             jobject obj,
                                                                                             jobject ptr) {
-  if (ptr == NULL) {
-    return -1;
-  }
-  heartbeat_context* hb = (heartbeat_context*) (*env)->GetDirectBufferAddress(env, ptr);
-  if (hb == NULL) {
-    return -1;
-  }
+  MACRO_GET_HB_OR_FAIL();
   return hb_get_global_time(hb);
 }
 
 JNIEXPORT jlong JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatJNI_heartbeatGetWindowTime(JNIEnv* env,
                                                                                             jobject obj,
                                                                                             jobject ptr) {
-  if (ptr == NULL) {
-    return -1;
-  }
-  heartbeat_context* hb = (heartbeat_context*) (*env)->GetDirectBufferAddress(env, ptr);
-  if (hb == NULL) {
-    return -1;
-  }
+  MACRO_GET_HB_OR_FAIL();
   return hb_get_window_time(hb);
 }
 
 JNIEXPORT jlong JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatJNI_heartbeatGetGlobalWork(JNIEnv* env,
                                                                                             jobject obj,
                                                                                             jobject ptr) {
-  if (ptr == NULL) {
-    return -1;
-  }
-  heartbeat_context* hb = (heartbeat_context*) (*env)->GetDirectBufferAddress(env, ptr);
-  if (hb == NULL) {
-    return -1;
-  }
+  MACRO_GET_HB_OR_FAIL();
   return hb_get_global_work(hb);
 }
 
 JNIEXPORT jlong JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatJNI_heartbeatGetWindowWork(JNIEnv* env,
                                                                                             jobject obj,
                                                                                             jobject ptr) {
-  if (ptr == NULL) {
-    return -1;
-  }
-  heartbeat_context* hb = (heartbeat_context*) (*env)->GetDirectBufferAddress(env, ptr);
-  if (hb == NULL) {
-    return -1;
-  }
+  MACRO_GET_HB_OR_FAIL();
   return hb_get_window_work(hb);
 }
 
 JNIEXPORT jdouble JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatJNI_heartbeatGetGlobalPerf(JNIEnv* env,
                                                                                               jobject obj,
                                                                                               jobject ptr) {
-  if (ptr == NULL) {
-    return -1;
-  }
-  heartbeat_context* hb = (heartbeat_context*) (*env)->GetDirectBufferAddress(env, ptr);
-  if (hb == NULL) {
-    return -1;
-  }
+  MACRO_GET_HB_OR_FAIL();
   return hb_get_global_perf(hb);
 }
 
 JNIEXPORT jdouble JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatJNI_heartbeatGetWindowPerf(JNIEnv* env,
                                                                                               jobject obj,
                                                                                               jobject ptr) {
-  if (ptr == NULL) {
-    return -1;
-  }
-  heartbeat_context* hb = (heartbeat_context*) (*env)->GetDirectBufferAddress(env, ptr);
-  if (hb == NULL) {
-    return -1;
-  }
+  MACRO_GET_HB_OR_FAIL();
   return hb_get_window_perf(hb);
 }
 
 JNIEXPORT jdouble JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatJNI_heartbeatGetInstantPerf(JNIEnv* env,
                                                                                                jobject obj,
                                                                                                jobject ptr) {
-  if (ptr == NULL) {
-    return -1;
-  }
-  heartbeat_context* hb = (heartbeat_context*) (*env)->GetDirectBufferAddress(env, ptr);
-  if (hb == NULL) {
-    return -1;
-  }
+  MACRO_GET_HB_OR_FAIL();
   return hb_get_instant_perf(hb);
 }

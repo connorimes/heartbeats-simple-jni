@@ -20,7 +20,7 @@
 
   <modules>
     <module>native</module>
-    <module>hbs</module>
+    <module>heartbeats-simple</module>
   </modules>
 
   <scm>
@@ -48,6 +48,24 @@
       <dependency>
         <groupId>edu.uchicago.cs.heartbeats</groupId>
         <artifactId>libhbs-wrapper</artifactId>
+        <type>so</type>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>edu.uchicago.cs.heartbeats</groupId>
+        <artifactId>libhbs-acc-wrapper</artifactId>
+        <type>so</type>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>edu.uchicago.cs.heartbeats</groupId>
+        <artifactId>libhbs-pow-wrapper</artifactId>
+        <type>so</type>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>edu.uchicago.cs.heartbeats</groupId>
+        <artifactId>libhbs-acc-pow-wrapper</artifactId>
         <type>so</type>
         <version>${project.version}</version>
       </dependency>

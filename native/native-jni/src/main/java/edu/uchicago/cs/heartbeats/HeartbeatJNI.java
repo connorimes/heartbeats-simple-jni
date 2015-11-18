@@ -19,7 +19,7 @@ public final class HeartbeatJNI {
 	 */
 	public static HeartbeatJNI get() {
 		if (instance == null) {
-			System.loadLibrary("hbs-default-wrapper");
+			System.loadLibrary("hbs-wrapper");
 			instance = new HeartbeatJNI();
 		}
 		return instance;
@@ -31,9 +31,9 @@ public final class HeartbeatJNI {
 
 	public native int heartbeatFinish(ByteBuffer ptr);
 
-	// public native int logHeader(int fd);
+	public native int heartbeatLogHeader(int fd);
 
-	// public native int logwindowBuffer(ByteBuffer ptr, int fd);
+	public native int heartbeatLogWindowBuffer(ByteBuffer ptr, int fd);
 
 	public native long heartbeatGetWindowSize(ByteBuffer ptr);
 

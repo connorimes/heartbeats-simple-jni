@@ -23,9 +23,9 @@
       </activation>
       <modules>
         <module>hbs</module>
-        <!--<module>hbs-acc</module>
+        <module>hbs-acc</module>
         <module>hbs-pow</module>
-        <module>hbs-acc-pow</module>-->
+        <module>hbs-acc-pow</module>
       </modules>
     </profile>
   </profiles>

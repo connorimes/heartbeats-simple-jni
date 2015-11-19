@@ -2,6 +2,7 @@ package edu.uchicago.cs.heartbeats;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 
 /**
  * Gets a heartbeat implementation and exposes methods for performing operations
@@ -11,12 +12,19 @@ import java.io.IOException;
  * externally. Attempting to perform operations after {@link #finish()} is
  * called will result in an {@link IllegalStateException}.
  * 
- * Failure to allocate the native resources also results in an
- * {@link IllegalStateException} in the constructor.
- * 
  * @author Connor Imes
  */
 public class DefaultHeartbeatJNI extends AbstractDefaultHeartbeatJNI implements Heartbeat {
+
+	/**
+	 * Don't allow public instantiation. Should use {@link #create(int)} which
+	 * throws exceptions on failure.
+	 * 
+	 * @param nativePtr
+	 */
+	protected DefaultHeartbeatJNI(final ByteBuffer nativePtr) {
+		this.nativePtr = nativePtr;
+	}
 
 	/**
 	 * Create a {@link DefaultHeartbeatJNI}.
@@ -25,11 +33,12 @@ public class DefaultHeartbeatJNI extends AbstractDefaultHeartbeatJNI implements 
 	 * @throws IllegalStateException
 	 *             if native resources cannot be allocated
 	 */
-	public DefaultHeartbeatJNI(final int windowSize) {
-		nativePtr = HeartbeatJNI.get().heartbeatInit(windowSize);
-		if (nativePtr == null) {
+	public static DefaultHeartbeatJNI create(final int windowSize) {
+		final ByteBuffer ptr = HeartbeatJNI.get().heartbeatInit(windowSize);
+		if (ptr == null) {
 			throw new IllegalStateException("Failed to get heartbeat over JNI");
 		}
+		return new DefaultHeartbeatJNI(ptr);
 	}
 
 	public void heartbeat(final long userTag, final long work, final long startTime, final long endTime) {

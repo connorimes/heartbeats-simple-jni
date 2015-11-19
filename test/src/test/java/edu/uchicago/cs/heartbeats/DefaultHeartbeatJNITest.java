@@ -21,7 +21,7 @@ public class DefaultHeartbeatJNITest {
 		final long userTag = 0;
 		final long endTime = 1000000000;
 		final long work = 1;
-		Heartbeat hb = new DefaultHeartbeatJNI(WINDOW_SIZE);
+		Heartbeat hb = DefaultHeartbeatJNI.create(WINDOW_SIZE);
 		hb.heartbeat(userTag, work, 0, endTime);
 		assertEquals("getWindowSize", WINDOW_SIZE, hb.getWindowSize());
 		assertEquals("getUserTag", userTag, hb.getUserTag());
@@ -51,7 +51,7 @@ public class DefaultHeartbeatJNITest {
 	
 	@Test(expected = IllegalStateException.class)
 	public void test_access_after_finish() {
-		Heartbeat hb = new DefaultHeartbeatJNI(WINDOW_SIZE);
+		Heartbeat hb = DefaultHeartbeatJNI.create(WINDOW_SIZE);
 		hb.finish();
 		// too cumbersome to try all methods, just do one
 		hb.getWindowSize();

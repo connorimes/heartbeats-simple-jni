@@ -23,7 +23,7 @@ public class DefaultHeartbeatAccuracyPowerJNITest {
 		final long work = 1;
 		final long accuracy = 1;
 		final long endEnergy = 1000000;
-		HeartbeatAccuracyPower hb = new DefaultHeartbeatAccuracyPowerJNI(WINDOW_SIZE);
+		HeartbeatAccuracyPower hb = DefaultHeartbeatAccuracyPowerJNI.create(WINDOW_SIZE);
 		hb.heartbeat(userTag, work, 0, endTime, 1, 0, endEnergy);
 		assertEquals("getWindowSize", WINDOW_SIZE, hb.getWindowSize());
 		assertEquals("getUserTag", userTag, hb.getUserTag());
@@ -63,7 +63,7 @@ public class DefaultHeartbeatAccuracyPowerJNITest {
 
 	@Test(expected = IllegalStateException.class)
 	public void test_access_after_finish() {
-		HeartbeatAccuracyPower hb = new DefaultHeartbeatAccuracyPowerJNI(WINDOW_SIZE);
+		HeartbeatAccuracyPower hb = DefaultHeartbeatAccuracyPowerJNI.create(WINDOW_SIZE);
 		hb.finish();
 		// too cumbersome to try all methods, just do one
 		hb.getWindowSize();

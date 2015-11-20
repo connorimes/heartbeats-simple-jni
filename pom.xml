@@ -21,7 +21,6 @@
   <modules>
     <module>native</module>
     <module>heartbeats-simple</module>
-    <module>test</module>
   </modules>
 
   <scm>

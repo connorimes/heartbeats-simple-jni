@@ -7,7 +7,7 @@
   <packaging>pom</packaging>
   <name>Heartbeats-Simple Parent</name>
   <description>Heartbeats-Simple over JNI</description>
-  <url>https://github.com/libheartbeats/heartbeats-simple-java</url>
+  <url>https://github.com/libheartbeats/heartbeats-simple-jni</url>
   <inceptionYear>2015</inceptionYear>
 
   <licenses>
@@ -24,14 +24,14 @@
   </modules>
 
   <scm>
-    <url>https://github.com/libheartbeats/heartbeats-simple-java</url>
-    <connection>scm:git:git://github.com/libheartbeats/heartbeats-simple-java.git</connection>
-    <developerConnection>scm:git:git@github.com/libheartbeats/heartbeats-simple-java.git</developerConnection>
+    <url>https://github.com/libheartbeats/heartbeats-simple-jni</url>
+    <connection>scm:git:git://github.com/libheartbeats/heartbeats-simple-jni.git</connection>
+    <developerConnection>scm:git:git@github.com/libheartbeats/heartbeats-simple-jni.git</developerConnection>
   </scm>
 
   <issueManagement>
     <system>GitHub</system>
-    <url>https://github.com/libheartbeats/heartbeats-simple-java/issues</url>
+    <url>https://github.com/libheartbeats/heartbeats-simple-jni/issues</url>
   </issueManagement>
 
   <properties>

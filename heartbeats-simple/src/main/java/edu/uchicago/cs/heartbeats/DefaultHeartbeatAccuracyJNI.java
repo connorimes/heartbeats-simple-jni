@@ -51,10 +51,14 @@ public class DefaultHeartbeatAccuracyJNI extends AbstractDefaultHeartbeatJNI imp
 		heartbeat(userTag, work, startTime, endTime, 0);
 	}
 
-	public void finish() {
-		enforceNotFinished();
+	protected void finishUnchecked() {
 		HeartbeatAccJNI.get().heartbeatAccFinish(nativePtr);
 		nativePtr = null;
+	}
+
+	public void finish() {
+		enforceNotFinished();
+		finishUnchecked();
 	}
 
 	public void logHeader(final FileOutputStream fos) throws IOException {
@@ -138,6 +142,18 @@ public class DefaultHeartbeatAccuracyJNI extends AbstractDefaultHeartbeatJNI imp
 	public double getInstantAccuracyRate() {
 		enforceNotFinished();
 		return HeartbeatAccJNI.get().heartbeatAccGetInstantAccuracyRate(nativePtr);
+	}
+
+	@Override
+	protected void finalize() throws Throwable {
+		// last-ditch effort to cleanup if user didn't follow protocol
+		try {
+			if (nativePtr != null) {
+				finishUnchecked();
+			}
+		} finally {
+			super.finalize();
+		}
 	}
 
 }

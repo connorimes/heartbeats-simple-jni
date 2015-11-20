@@ -51,10 +51,14 @@ public class DefaultHeartbeatPowerJNI extends AbstractDefaultHeartbeatJNI implem
 		heartbeat(userTag, work, startTime, endTime, 0, 0);
 	}
 
-	public void finish() {
-		enforceNotFinished();
+	protected void finishUnchecked() {
 		HeartbeatPowJNI.get().heartbeatPowFinish(nativePtr);
 		nativePtr = null;
+	}
+
+	public void finish() {
+		enforceNotFinished();
+		finishUnchecked();
 	}
 
 	public void logHeader(final FileOutputStream fos) throws IOException {
@@ -138,6 +142,18 @@ public class DefaultHeartbeatPowerJNI extends AbstractDefaultHeartbeatJNI implem
 	public double getInstantPower() {
 		enforceNotFinished();
 		return HeartbeatPowJNI.get().heartbeatPowGetInstantPower(nativePtr);
+	}
+
+	@Override
+	protected void finalize() throws Throwable {
+		// last-ditch effort to cleanup if user didn't follow protocol
+		try {
+			if (nativePtr != null) {
+				finishUnchecked();
+			}
+		} finally {
+			super.finalize();
+		}
 	}
 
 }

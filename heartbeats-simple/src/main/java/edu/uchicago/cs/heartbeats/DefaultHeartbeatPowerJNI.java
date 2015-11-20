@@ -44,7 +44,6 @@ public class DefaultHeartbeatPowerJNI extends AbstractDefaultHeartbeatJNI implem
 	public void heartbeat(final long userTag, final long work, final long startTime, final long endTime,
 			final long startEnergy, final long endEnergy) {
 		enforceNotFinished();
-		// TODO: enforce that values are unsigned.
 		HeartbeatPowJNI.get().heartbeatPow(nativePtr, userTag, work, startTime, endTime, startEnergy, endEnergy);
 	}
 
@@ -54,19 +53,19 @@ public class DefaultHeartbeatPowerJNI extends AbstractDefaultHeartbeatJNI implem
 
 	public void finish() {
 		enforceNotFinished();
-		HeartbeatJNI.get().heartbeatFinish(nativePtr);
+		HeartbeatPowJNI.get().heartbeatPowFinish(nativePtr);
 		nativePtr = null;
 	}
 
 	public void logHeader(final FileOutputStream fos) throws IOException {
-		if (HeartbeatJNI.get().heartbeatLogHeader(getFileDescriptor(fos)) != 0) {
+		if (HeartbeatPowJNI.get().heartbeatPowLogHeader(getFileDescriptor(fos)) != 0) {
 			throw new IOException("Failed to write log header");
 		}
 	}
 
 	public void logWindowBuffer(final FileOutputStream fos) throws IOException {
 		enforceNotFinished();
-		if (HeartbeatJNI.get().heartbeatLogWindowBuffer(nativePtr, getFileDescriptor(fos)) != 0) {
+		if (HeartbeatPowJNI.get().heartbeatPowLogWindowBuffer(nativePtr, getFileDescriptor(fos)) != 0) {
 			throw new IOException("Failed to write window buffer");
 		}
 	}

@@ -43,7 +43,6 @@ public class DefaultHeartbeatJNI extends AbstractDefaultHeartbeatJNI implements 
 
 	public void heartbeat(final long userTag, final long work, final long startTime, final long endTime) {
 		enforceNotFinished();
-		// TODO: enforce that values are unsigned.
 		HeartbeatJNI.get().heartbeat(nativePtr, userTag, work, startTime, endTime);
 	}
 

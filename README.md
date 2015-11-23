@@ -11,8 +11,8 @@ The latest `heartbeats-simple` C libraries can be found at
 
 ## Building
 
-This project uses `Maven`.
-Currently the only supported platforms are the `unix` family.)
+This project uses [Maven](http://maven.apache.org/).
+Currently the only supported platforms are the `unix` family.
 To build and run junit tests:
 
 ```sh

@@ -35,7 +35,7 @@ JNIEXPORT jobject JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatAccPowJNI_hea
   	free(hb);
   	return NULL;
   }
-  if (heartbeat_acc_pow_init(hb, window_size, hbr, NULL)) {
+  if (heartbeat_acc_pow_init(hb, window_size, hbr, -1, NULL)) {
     free(hbr);
     free(hb);
     return NULL;

@@ -25,10 +25,10 @@ public final class HeartbeatPowJNI {
 		return instance;
 	}
 
-	public native ByteBuffer heartbeatPowInit(int window_size);
+	public native ByteBuffer heartbeatPowInit(int windowSize, int logFd);
 
 	public native void heartbeatPow(ByteBuffer ptr, long userTag, long work, long startTime, long endTime,
-			long start_energy, long end_energy);
+			long startEnergy, long endEnergy);
 
 	public native void heartbeatPowFinish(ByteBuffer ptr);
 

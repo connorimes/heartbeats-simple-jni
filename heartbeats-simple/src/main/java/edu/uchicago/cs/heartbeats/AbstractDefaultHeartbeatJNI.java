@@ -11,11 +11,15 @@ import java.nio.ByteBuffer;
  * 
  * @author Connor Imes
  */
-public class AbstractDefaultHeartbeatJNI {
+public abstract class AbstractDefaultHeartbeatJNI {
 	/**
 	 * The pointer to the underlying heartbeat allocated natively.
 	 */
 	protected volatile ByteBuffer nativePtr;
+	/**
+	 * The output stream to write log data to.
+	 */
+	protected FileOutputStream fos;
 
 	/**
 	 * Throws an {@link IllegalStateException} if {@link #nativePtr} is null.
@@ -36,7 +40,10 @@ public class AbstractDefaultHeartbeatJNI {
 	 * @return fd
 	 * @throws IOException
 	 */
-	protected int getFileDescriptor(final FileOutputStream fos) throws IOException {
+	protected static int getFileDescriptor(final FileOutputStream fos) throws IOException {
+		if (fos == null) {
+			return -1;
+		}
 		// a hack - not guaranteed to be forward/backward compatible in Java!
 		try {
 			final Field field = FileDescriptor.class.getDeclaredField("fd");

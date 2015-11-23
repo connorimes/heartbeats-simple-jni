@@ -22,7 +22,8 @@ public class DefaultHeartbeatPowerJNITest {
 		final long endTime = 1000000000;
 		final long work = 1;
 		final long endEnergy = 1000000;
-		HeartbeatPower hb = DefaultHeartbeatPowerJNI.create(WINDOW_SIZE);
+		FileOutputStream fos = new FileOutputStream(FileDescriptor.out);
+		HeartbeatPower hb = DefaultHeartbeatPowerJNI.create(WINDOW_SIZE, fos);
 		hb.heartbeat(userTag, work, 0, endTime, 0, endEnergy);
 		assertEquals("getWindowSize", WINDOW_SIZE, hb.getWindowSize());
 		assertEquals("getUserTag", userTag, hb.getUserTag());
@@ -32,15 +33,14 @@ public class DefaultHeartbeatPowerJNITest {
 		assertEquals("getWindowWork", work, hb.getWindowWork());
 		assertEquals("getGlobalEnergy", endEnergy, hb.getGlobalEnergy());
 		assertEquals("getWindowEnergy", endEnergy, hb.getWindowEnergy());
-		FileOutputStream fos = new FileOutputStream(FileDescriptor.out);
 		try {
-			hb.logHeader(fos);
+			hb.logHeader();
 		} catch (IOException e) {
 			e.printStackTrace();
 			fail("IOException logging header");
 		}
 		try {
-			hb.logWindowBuffer(fos);
+			hb.logWindowBuffer();
 		} catch (IOException e) {
 			e.printStackTrace();
 			fail("IOException logging window buffer");
@@ -57,7 +57,7 @@ public class DefaultHeartbeatPowerJNITest {
 
 	@Test(expected = IllegalStateException.class)
 	public void test_access_after_finish() {
-		HeartbeatPower hb = DefaultHeartbeatPowerJNI.create(WINDOW_SIZE);
+		HeartbeatPower hb = DefaultHeartbeatPowerJNI.create(WINDOW_SIZE, null);
 		hb.finish();
 		// too cumbersome to try all methods, just do one
 		hb.getWindowSize();

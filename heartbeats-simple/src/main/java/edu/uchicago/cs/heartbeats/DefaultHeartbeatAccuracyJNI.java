@@ -21,24 +21,31 @@ public class DefaultHeartbeatAccuracyJNI extends AbstractDefaultHeartbeatJNI imp
 	 * throws exceptions on failure.
 	 * 
 	 * @param nativePtr
+	 * @param fos
 	 */
-	protected DefaultHeartbeatAccuracyJNI(final ByteBuffer nativePtr) {
+	protected DefaultHeartbeatAccuracyJNI(final ByteBuffer nativePtr, final FileOutputStream fos) {
 		this.nativePtr = nativePtr;
+		this.fos = fos;
 	}
 
 	/**
 	 * Create a {@link DefaultHeartbeatAccuracyJNI}.
 	 * 
 	 * @param windowSize
+	 * @param fos
 	 * @throws IllegalStateException
 	 *             if native resources cannot be allocated
 	 */
-	public static DefaultHeartbeatAccuracyJNI create(final int windowSize) {
-		final ByteBuffer ptr = HeartbeatAccJNI.get().heartbeatAccInit(windowSize);
-		if (ptr == null) {
-			throw new IllegalStateException("Failed to get heartbeat over JNI");
+	public static DefaultHeartbeatAccuracyJNI create(final int windowSize, final FileOutputStream fos) {
+		try {
+			final ByteBuffer ptr = HeartbeatAccJNI.get().heartbeatAccInit(windowSize, getFileDescriptor(fos));
+			if (ptr == null) {
+				throw new IllegalStateException("Failed to get heartbeat over JNI");
+			}
+			return new DefaultHeartbeatAccuracyJNI(ptr, fos);
+		} catch (IOException e) {
+			throw new IllegalStateException("Failed to get file descriptor");
 		}
-		return new DefaultHeartbeatAccuracyJNI(ptr);
 	}
 
 	public void heartbeat(final long userTag, final long work, final long startTime, final long endTime,
@@ -61,13 +68,13 @@ public class DefaultHeartbeatAccuracyJNI extends AbstractDefaultHeartbeatJNI imp
 		finishUnchecked();
 	}
 
-	public void logHeader(final FileOutputStream fos) throws IOException {
+	public void logHeader() throws IOException {
 		if (HeartbeatAccJNI.get().heartbeatAccLogHeader(getFileDescriptor(fos)) != 0) {
 			throw new IOException("Failed to write log header");
 		}
 	}
 
-	public void logWindowBuffer(final FileOutputStream fos) throws IOException {
+	public void logWindowBuffer() throws IOException {
 		enforceNotFinished();
 		if (HeartbeatAccJNI.get().heartbeatAccLogWindowBuffer(nativePtr, getFileDescriptor(fos)) != 0) {
 			throw new IOException("Failed to write window buffer");

@@ -22,7 +22,8 @@
  */
 JNIEXPORT jobject JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatAccJNI_heartbeatAccInit(JNIEnv* env,
                                                                                            jobject obj,
-                                                                                           jint window_size) {
+                                                                                           jint window_size,
+                                                                                           jint log_fd) {
   if (window_size <= 0) {
   	return NULL;
   }
@@ -35,7 +36,7 @@ JNIEXPORT jobject JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatAccJNI_heartb
   	free(hb);
   	return NULL;
   }
-  if (heartbeat_acc_init(hb, window_size, hbr, -1, NULL)) {
+  if (heartbeat_acc_init(hb, window_size, hbr, log_fd, NULL)) {
     free(hbr);
     free(hb);
     return NULL;

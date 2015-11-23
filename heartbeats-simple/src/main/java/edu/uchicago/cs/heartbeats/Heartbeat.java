@@ -1,6 +1,5 @@
 package edu.uchicago.cs.heartbeats;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
@@ -36,20 +35,18 @@ public interface Heartbeat {
 	/**
 	 * Write the header text to a log file.
 	 *
-	 * @param fos
 	 * @throws IOException
 	 */
-	void logHeader(FileOutputStream fos) throws IOException;
+	void logHeader() throws IOException;
 
 	/**
 	 * Logs the circular window buffer up to the current read index.
 	 *
-	 * @param fos
 	 * @throws IllegalStateException
 	 *             if already finished
 	 * @throws IOException
 	 */
-	void logWindowBuffer(FileOutputStream fos) throws IOException;
+	void logWindowBuffer() throws IOException;
 
 	/**
 	 * Returns the size of the sliding window used to compute the current heart

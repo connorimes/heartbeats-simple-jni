@@ -21,11 +21,31 @@ public class DefaultHeartbeatPowerJNI extends AbstractDefaultHeartbeatJNI implem
 	 * throws exceptions on failure.
 	 * 
 	 * @param nativePtr
+	 */
+	protected DefaultHeartbeatPowerJNI(final ByteBuffer nativePtr) {
+		this(nativePtr, null);
+	}
+
+	/**
+	 * Don't allow public instantiation. Should use {@link #create(int)} which
+	 * throws exceptions on failure.
+	 * 
+	 * @param nativePtr
 	 * @param fos
 	 */
 	protected DefaultHeartbeatPowerJNI(final ByteBuffer nativePtr, final FileOutputStream fos) {
-		this.nativePtr = nativePtr;
-		this.fos = fos;
+		super(nativePtr, fos);
+	}
+
+	/**
+	 * Create a {@link DefaultHeartbeatPowerJNI}.
+	 * 
+	 * @param windowSize
+	 * @throws IllegalStateException
+	 *             if native resources cannot be allocated
+	 */
+	public static DefaultHeartbeatPowerJNI create(final int windowSize) {
+		return create(windowSize, null);
 	}
 
 	/**

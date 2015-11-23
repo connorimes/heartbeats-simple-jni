@@ -16,10 +16,16 @@ public abstract class AbstractDefaultHeartbeatJNI {
 	 * The pointer to the underlying heartbeat allocated natively.
 	 */
 	protected volatile ByteBuffer nativePtr;
+
 	/**
 	 * The output stream to write log data to.
 	 */
 	protected FileOutputStream fos;
+
+	public AbstractDefaultHeartbeatJNI(final ByteBuffer nativePtr, final FileOutputStream fos) {
+		this.nativePtr = nativePtr;
+		this.fos = fos;
+	}
 
 	/**
 	 * Throws an {@link IllegalStateException} if {@link #nativePtr} is null.

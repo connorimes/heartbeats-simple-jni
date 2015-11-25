@@ -20,11 +20,19 @@ public abstract class AbstractDefaultHeartbeatJNI {
 	/**
 	 * The output stream to write log data to.
 	 */
-	protected FileOutputStream fos;
+	protected FileOutputStream logStream;
 
-	public AbstractDefaultHeartbeatJNI(final ByteBuffer nativePtr, final FileOutputStream fos) {
+	public AbstractDefaultHeartbeatJNI(final ByteBuffer nativePtr, final FileOutputStream logStream) {
 		this.nativePtr = nativePtr;
-		this.fos = fos;
+		this.logStream = logStream;
+	}
+
+	public FileOutputStream getLogStream() {
+		return logStream;
+	}
+
+	public void setLogStream(final FileOutputStream logStream) {
+		this.logStream = logStream;
 	}
 
 	/**

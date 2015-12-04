@@ -25,52 +25,52 @@ public final class HeartbeatAccPowJNI {
 		return instance;
 	}
 
-	public native ByteBuffer heartbeatAccPowInit(int windowSize, int logFd);
+	public native ByteBuffer init(int windowSize, int logFd);
 
-	public native void heartbeatAccPow(ByteBuffer ptr, long userTag, long work, long startTime, long endTime,
+	public native void heartbeat(ByteBuffer ptr, long userTag, long work, long startTime, long endTime,
 			long accuracy, long startEnergy, long endEnergy);
 
-	public native void heartbeatAccPowFinish(ByteBuffer ptr);
+	public native void finish(ByteBuffer ptr);
 
-	public native int heartbeatAccPowLogHeader(int fd);
+	public native int logHeader(int fd);
 
-	public native int heartbeatAccPowLogWindowBuffer(ByteBuffer ptr, int fd);
+	public native int logWindowBuffer(ByteBuffer ptr, int fd);
 
-	public native long heartbeatAccPowGetWindowSize(ByteBuffer ptr);
+	public native long getWindowSize(ByteBuffer ptr);
 
-	public native long heartbeatAccPowGetUserTag(ByteBuffer ptr);
+	public native long getUserTag(ByteBuffer ptr);
 
-	public native long heartbeatAccPowGetGlobalTime(ByteBuffer ptr);
+	public native long getGlobalTime(ByteBuffer ptr);
 
-	public native long heartbeatAccPowGetWindowTime(ByteBuffer ptr);
+	public native long getWindowTime(ByteBuffer ptr);
 
-	public native long heartbeatAccPowGetGlobalWork(ByteBuffer ptr);
+	public native long getGlobalWork(ByteBuffer ptr);
 
-	public native long heartbeatAccPowGetWindowWork(ByteBuffer ptr);
+	public native long getWindowWork(ByteBuffer ptr);
 
-	public native double heartbeatAccPowGetGlobalPerf(ByteBuffer ptr);
+	public native double getGlobalPerf(ByteBuffer ptr);
 
-	public native double heartbeatAccPowGetWindowPerf(ByteBuffer ptr);
+	public native double getWindowPerf(ByteBuffer ptr);
 
-	public native double heartbeatAccPowGetInstantPerf(ByteBuffer ptr);
+	public native double getInstantPerf(ByteBuffer ptr);
 
-	public native long heartbeatAccPowGetGlobalAccuracy(ByteBuffer ptr);
+	public native long getGlobalAccuracy(ByteBuffer ptr);
 
-	public native long heartbeatAccPowGetWindowAccuracy(ByteBuffer ptr);
+	public native long getWindowAccuracy(ByteBuffer ptr);
 
-	public native double heartbeatAccPowGetGlobalAccuracyRate(ByteBuffer ptr);
+	public native double getGlobalAccuracyRate(ByteBuffer ptr);
 
-	public native double heartbeatAccPowGetWindowAccuracyRate(ByteBuffer ptr);
+	public native double getWindowAccuracyRate(ByteBuffer ptr);
 
-	public native double heartbeatAccPowGetInstantAccuracyRate(ByteBuffer ptr);
+	public native double getInstantAccuracyRate(ByteBuffer ptr);
 
-	public native long heartbeatAccPowGetGlobalEnergy(ByteBuffer ptr);
+	public native long getGlobalEnergy(ByteBuffer ptr);
 
-	public native long heartbeatAccPowGetWindowEnergy(ByteBuffer ptr);
+	public native long getWindowEnergy(ByteBuffer ptr);
 
-	public native double heartbeatAccPowGetGlobalPower(ByteBuffer ptr);
+	public native double getGlobalPower(ByteBuffer ptr);
 
-	public native double heartbeatAccPowGetWindowPower(ByteBuffer ptr);
+	public native double getWindowPower(ByteBuffer ptr);
 
-	public native double heartbeatAccPowGetInstantPower(ByteBuffer ptr);
+	public native double getInstantPower(ByteBuffer ptr);
 }

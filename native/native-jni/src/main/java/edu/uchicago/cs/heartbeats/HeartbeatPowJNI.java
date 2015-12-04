@@ -25,42 +25,42 @@ public final class HeartbeatPowJNI {
 		return instance;
 	}
 
-	public native ByteBuffer heartbeatPowInit(int windowSize, int logFd);
+	public native ByteBuffer init(int windowSize, int logFd);
 
-	public native void heartbeatPow(ByteBuffer ptr, long userTag, long work, long startTime, long endTime,
+	public native void heartbeat(ByteBuffer ptr, long userTag, long work, long startTime, long endTime,
 			long startEnergy, long endEnergy);
 
-	public native void heartbeatPowFinish(ByteBuffer ptr);
+	public native void finish(ByteBuffer ptr);
 
-	public native int heartbeatPowLogHeader(int fd);
+	public native int logHeader(int fd);
 
-	public native int heartbeatPowLogWindowBuffer(ByteBuffer ptr, int fd);
+	public native int logWindowBuffer(ByteBuffer ptr, int fd);
 
-	public native long heartbeatPowGetWindowSize(ByteBuffer ptr);
+	public native long getWindowSize(ByteBuffer ptr);
 
-	public native long heartbeatPowGetUserTag(ByteBuffer ptr);
+	public native long getUserTag(ByteBuffer ptr);
 
-	public native long heartbeatPowGetGlobalTime(ByteBuffer ptr);
+	public native long getGlobalTime(ByteBuffer ptr);
 
-	public native long heartbeatPowGetWindowTime(ByteBuffer ptr);
+	public native long getWindowTime(ByteBuffer ptr);
 
-	public native long heartbeatPowGetGlobalWork(ByteBuffer ptr);
+	public native long getGlobalWork(ByteBuffer ptr);
 
-	public native long heartbeatPowGetWindowWork(ByteBuffer ptr);
+	public native long getWindowWork(ByteBuffer ptr);
 
-	public native double heartbeatPowGetGlobalPerf(ByteBuffer ptr);
+	public native double getGlobalPerf(ByteBuffer ptr);
 
-	public native double heartbeatPowGetWindowPerf(ByteBuffer ptr);
+	public native double getWindowPerf(ByteBuffer ptr);
 
-	public native double heartbeatPowGetInstantPerf(ByteBuffer ptr);
+	public native double getInstantPerf(ByteBuffer ptr);
 
-	public native long heartbeatPowGetGlobalEnergy(ByteBuffer ptr);
+	public native long getGlobalEnergy(ByteBuffer ptr);
 
-	public native long heartbeatPowGetWindowEnergy(ByteBuffer ptr);
+	public native long getWindowEnergy(ByteBuffer ptr);
 
-	public native double heartbeatPowGetGlobalPower(ByteBuffer ptr);
+	public native double getGlobalPower(ByteBuffer ptr);
 
-	public native double heartbeatPowGetWindowPower(ByteBuffer ptr);
+	public native double getWindowPower(ByteBuffer ptr);
 
-	public native double heartbeatPowGetInstantPower(ByteBuffer ptr);
+	public native double getInstantPower(ByteBuffer ptr);
 }

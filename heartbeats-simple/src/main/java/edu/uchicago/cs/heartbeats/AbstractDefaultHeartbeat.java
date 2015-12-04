@@ -13,7 +13,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * 
  * @author Connor Imes
  */
-public abstract class AbstractDefaultHeartbeatJNI {
+public abstract class AbstractDefaultHeartbeat {
 	/**
 	 * The pointer to the underlying heartbeat allocated natively.
 	 */
@@ -28,7 +28,7 @@ public abstract class AbstractDefaultHeartbeatJNI {
 	 */
 	protected FileOutputStream logStream;
 
-	public AbstractDefaultHeartbeatJNI(final ByteBuffer nativePtr, final FileOutputStream logStream) {
+	public AbstractDefaultHeartbeat(final ByteBuffer nativePtr, final FileOutputStream logStream) {
 		this.nativePtr = nativePtr;
 		this.logStream = logStream;
 		this.lock = new ReentrantReadWriteLock(true);

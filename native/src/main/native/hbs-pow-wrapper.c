@@ -20,10 +20,10 @@
  * Allocate memory and get the heartbeat.
  * Returns a pointer to the heartbeat, or NULL on failure.
  */
-JNIEXPORT jobject JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatPowJNI_heartbeatPowInit(JNIEnv* env,
-                                                                                           jobject obj,
-                                                                                           jint window_size,
-                                                                                           jint log_fd) {
+JNIEXPORT jobject JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatPowJNI_init(JNIEnv* env,
+                                                                               jobject obj,
+                                                                               jint window_size,
+                                                                               jint log_fd) {
   if (window_size <= 0) {
   	return NULL;
   }
@@ -47,15 +47,15 @@ JNIEXPORT jobject JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatPowJNI_heartb
 /**
  * Issue a heartbeat.
  */
-JNIEXPORT void JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatPowJNI_heartbeatPow(JNIEnv* env,
-                                                                                    jobject obj,
-                                                                                    jobject ptr,
-                                                                                    jlong user_tag,
-                                                                                    jlong work,
-                                                                                    jlong start_time,
-                                                                                    jlong end_time,
-                                                                                    jlong start_energy,
-                                                                                    jlong end_energy) {
+JNIEXPORT void JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatPowJNI_heartbeat(JNIEnv* env,
+                                                                                 jobject obj,
+                                                                                 jobject ptr,
+                                                                                 jlong user_tag,
+                                                                                 jlong work,
+                                                                                 jlong start_time,
+                                                                                 jlong end_time,
+                                                                                 jlong start_energy,
+                                                                                 jlong end_energy) {
   MACRO_GET_HB();
   heartbeat_pow(hb, user_tag, work, start_time, end_time, start_energy, end_energy);
 }
@@ -64,9 +64,9 @@ JNIEXPORT void JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatPowJNI_heartbeat
  * Cleanup the heartbeat specified by the provided pointer.
  * Returns 0 on success or failure code otherwise.
  */
-JNIEXPORT void JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatPowJNI_heartbeatPowFinish(JNIEnv* env,
-                                                                                          jobject obj,
-                                                                                          jobject ptr) {
+JNIEXPORT void JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatPowJNI_finish(JNIEnv* env,
+                                                                              jobject obj,
+                                                                              jobject ptr) {
   MACRO_GET_HB();
   if (hb != NULL) {
     free(hb->window_buffer);
@@ -74,114 +74,114 @@ JNIEXPORT void JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatPowJNI_heartbeat
   }
 }
 
-JNIEXPORT jint JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatPowJNI_heartbeatPowLogHeader(JNIEnv* env,
-                                                                                             jobject obj,
-                                                                                             jint fd) {
+JNIEXPORT jint JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatPowJNI_logHeader(JNIEnv* env,
+                                                                                 jobject obj,
+                                                                                 jint fd) {
   return hb_pow_log_header(fd);
 }
 
-JNIEXPORT jint JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatPowJNI_heartbeatPowLogWindowBuffer(JNIEnv* env,
-                                                                                                   jobject obj,
-                                                                                                   jobject ptr,
-                                                                                                   jint fd) {
+JNIEXPORT jint JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatPowJNI_logWindowBuffer(JNIEnv* env,
+                                                                                       jobject obj,
+                                                                                       jobject ptr,
+                                                                                       jint fd) {
   MACRO_GET_HB();
   return hb_pow_log_window_buffer(hb, fd);
 }
 
-JNIEXPORT jlong JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatPowJNI_heartbeatPowGetWindowSize(JNIEnv* env,
-                                                                                                  jobject obj,
-                                                                                                  jobject ptr) {
+JNIEXPORT jlong JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatPowJNI_getWindowSize(JNIEnv* env,
+                                                                                      jobject obj,
+                                                                                      jobject ptr) {
   MACRO_GET_HB();
   return hb_pow_get_window_size(hb);
 }
 
-JNIEXPORT jlong JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatPowJNI_heartbeatPowGetUserTag(JNIEnv* env,
-                                                                                               jobject obj,
-                                                                                               jobject ptr) {
+JNIEXPORT jlong JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatPowJNI_getUserTag(JNIEnv* env,
+                                                                                   jobject obj,
+                                                                                   jobject ptr) {
   MACRO_GET_HB();
   return hb_pow_get_user_tag(hb);
 }
 
-JNIEXPORT jlong JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatPowJNI_heartbeatPowGetGlobalTime(JNIEnv* env,
-                                                                                                  jobject obj,
-                                                                                                  jobject ptr) {
+JNIEXPORT jlong JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatPowJNI_getGlobalTime(JNIEnv* env,
+                                                                                      jobject obj,
+                                                                                      jobject ptr) {
   MACRO_GET_HB();
   return hb_pow_get_global_time(hb);
 }
 
-JNIEXPORT jlong JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatPowJNI_heartbeatPowGetWindowTime(JNIEnv* env,
-                                                                                                  jobject obj,
-                                                                                                  jobject ptr) {
+JNIEXPORT jlong JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatPowJNI_getWindowTime(JNIEnv* env,
+                                                                                      jobject obj,
+                                                                                      jobject ptr) {
   MACRO_GET_HB();
   return hb_pow_get_window_time(hb);
 }
 
-JNIEXPORT jlong JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatPowJNI_heartbeatPowGetGlobalWork(JNIEnv* env,
-                                                                                                  jobject obj,
-                                                                                                  jobject ptr) {
+JNIEXPORT jlong JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatPowJNI_getGlobalWork(JNIEnv* env,
+                                                                                      jobject obj,
+                                                                                      jobject ptr) {
   MACRO_GET_HB();
   return hb_pow_get_global_work(hb);
 }
 
-JNIEXPORT jlong JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatPowJNI_heartbeatPowGetWindowWork(JNIEnv* env,
-                                                                                                  jobject obj,
-                                                                                                  jobject ptr) {
+JNIEXPORT jlong JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatPowJNI_getWindowWork(JNIEnv* env,
+                                                                                      jobject obj,
+                                                                                      jobject ptr) {
   MACRO_GET_HB();
   return hb_pow_get_window_work(hb);
 }
 
-JNIEXPORT jdouble JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatPowJNI_heartbeatPowGetGlobalPerf(JNIEnv* env,
-                                                                                                    jobject obj,
-                                                                                                    jobject ptr) {
+JNIEXPORT jdouble JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatPowJNI_getGlobalPerf(JNIEnv* env,
+                                                                                        jobject obj,
+                                                                                        jobject ptr) {
   MACRO_GET_HB();
   return hb_pow_get_global_perf(hb);
 }
 
-JNIEXPORT jdouble JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatPowJNI_heartbeatPowGetWindowPerf(JNIEnv* env,
-                                                                                                    jobject obj,
-                                                                                                    jobject ptr) {
+JNIEXPORT jdouble JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatPowJNI_getWindowPerf(JNIEnv* env,
+                                                                                        jobject obj,
+                                                                                        jobject ptr) {
   MACRO_GET_HB();
   return hb_pow_get_window_perf(hb);
 }
 
-JNIEXPORT jdouble JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatPowJNI_heartbeatPowGetInstantPerf(JNIEnv* env,
-                                                                                                     jobject obj,
-                                                                                                     jobject ptr) {
+JNIEXPORT jdouble JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatPowJNI_getInstantPerf(JNIEnv* env,
+                                                                                         jobject obj,
+                                                                                         jobject ptr) {
   MACRO_GET_HB();
   return hb_pow_get_instant_perf(hb);
 }
 
-JNIEXPORT jlong JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatPowJNI_heartbeatPowGetGlobalEnergy(JNIEnv* env,
-                                                                                                    jobject obj,
-                                                                                                    jobject ptr) {
+JNIEXPORT jlong JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatPowJNI_getGlobalEnergy(JNIEnv* env,
+                                                                                        jobject obj,
+                                                                                        jobject ptr) {
   MACRO_GET_HB();
   return hb_pow_get_global_energy(hb);
 }
 
-JNIEXPORT jlong JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatPowJNI_heartbeatPowGetWindowEnergy(JNIEnv* env,
-                                                                                                    jobject obj,
-                                                                                                    jobject ptr) {
+JNIEXPORT jlong JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatPowJNI_getWindowEnergy(JNIEnv* env,
+                                                                                        jobject obj,
+                                                                                        jobject ptr) {
   MACRO_GET_HB();
   return hb_pow_get_window_energy(hb);
 }
 
-JNIEXPORT jdouble JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatPowJNI_heartbeatPowGetGlobalPower(JNIEnv* env,
-                                                                                                     jobject obj,
-                                                                                                     jobject ptr) {
+JNIEXPORT jdouble JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatPowJNI_getGlobalPower(JNIEnv* env,
+                                                                                         jobject obj,
+                                                                                         jobject ptr) {
   MACRO_GET_HB();
   return hb_pow_get_global_power(hb);
 }
 
-JNIEXPORT jdouble JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatPowJNI_heartbeatPowGetWindowPower(JNIEnv* env,
-                                                                                                     jobject obj,
-                                                                                                     jobject ptr) {
+JNIEXPORT jdouble JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatPowJNI_getWindowPower(JNIEnv* env,
+                                                                                         jobject obj,
+                                                                                         jobject ptr) {
   MACRO_GET_HB();
   return hb_pow_get_window_power(hb);
 }
 
-JNIEXPORT jdouble JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatPowJNI_heartbeatPowGetInstantPower(JNIEnv* env,
-                                                                                                      jobject obj,
-                                                                                                      jobject ptr) {
+JNIEXPORT jdouble JNICALL Java_edu_uchicago_cs_heartbeats_HeartbeatPowJNI_getInstantPower(JNIEnv* env,
+                                                                                          jobject obj,
+                                                                                          jobject ptr) {
   MACRO_GET_HB();
   return hb_pow_get_instant_power(hb);
 }

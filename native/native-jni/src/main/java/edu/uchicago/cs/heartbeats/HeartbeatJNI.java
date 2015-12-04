@@ -25,31 +25,31 @@ public final class HeartbeatJNI {
 		return instance;
 	}
 
-	public native ByteBuffer heartbeatInit(int windowSize, int logFd);
+	public native ByteBuffer init(int windowSize, int logFd);
 
 	public native void heartbeat(ByteBuffer ptr, long userTag, long work, long startTime, long endTime);
 
-	public native void heartbeatFinish(ByteBuffer ptr);
+	public native void finish(ByteBuffer ptr);
 
-	public native int heartbeatLogHeader(int fd);
+	public native int logHeader(int fd);
 
-	public native int heartbeatLogWindowBuffer(ByteBuffer ptr, int fd);
+	public native int logWindowBuffer(ByteBuffer ptr, int fd);
 
-	public native long heartbeatGetWindowSize(ByteBuffer ptr);
+	public native long getWindowSize(ByteBuffer ptr);
 
-	public native long heartbeatGetUserTag(ByteBuffer ptr);
+	public native long getUserTag(ByteBuffer ptr);
 
-	public native long heartbeatGetGlobalTime(ByteBuffer ptr);
+	public native long getGlobalTime(ByteBuffer ptr);
 
-	public native long heartbeatGetWindowTime(ByteBuffer ptr);
+	public native long getWindowTime(ByteBuffer ptr);
 
-	public native long heartbeatGetGlobalWork(ByteBuffer ptr);
+	public native long getGlobalWork(ByteBuffer ptr);
 
-	public native long heartbeatGetWindowWork(ByteBuffer ptr);
+	public native long getWindowWork(ByteBuffer ptr);
 
-	public native double heartbeatGetGlobalPerf(ByteBuffer ptr);
+	public native double getGlobalPerf(ByteBuffer ptr);
 
-	public native double heartbeatGetWindowPerf(ByteBuffer ptr);
+	public native double getWindowPerf(ByteBuffer ptr);
 
-	public native double heartbeatGetInstantPerf(ByteBuffer ptr);
+	public native double getInstantPerf(ByteBuffer ptr);
 }

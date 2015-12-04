@@ -42,11 +42,9 @@ To integrate with the library, add it as a Maven dependency to your project's `p
 
 The following `interface`:`implementation` pairs are available:
 
-* `edu.uchicago.cs.heartbeats.Heartbeat`:`edu.uchicago.cs.heartbeats.DefaultHeartbeatJNI`
-* `edu.uchicago.cs.heartbeats.HeartbeatAccuracy`:`edu.uchicago.cs.heartbeats.DefaultHeartbeatAccuracyJNI`
-* `edu.uchicago.cs.heartbeats.HeartbeatPower`:`edu.uchicago.cs.heartbeats.DefaultHeartbeatPowerJNI`
-* `edu.uchicago.cs.heartbeats.HeartbeatAccuracyPower`:`edu.uchicago.cs.heartbeats.DefaultHeartbeatAccuracyPowerJNI`
-
-Note that the default implementations are not thread safe - you must provide synchronization as needed!
+* `edu.uchicago.cs.heartbeats.Heartbeat`:`edu.uchicago.cs.heartbeats.DefaultHeartbeat`
+* `edu.uchicago.cs.heartbeats.HeartbeatAccuracy`:`edu.uchicago.cs.heartbeats.DefaultHeartbeatAccuracy`
+* `edu.uchicago.cs.heartbeats.HeartbeatPower`:`edu.uchicago.cs.heartbeats.DefaultHeartbeatPower`
+* `edu.uchicago.cs.heartbeats.HeartbeatAccuracyPower`:`edu.uchicago.cs.heartbeats.DefaultHeartbeatAccuracyPower`
 
 When launching, you will need to set the property `java.library.path` to include the location of the native libraries created by the modules `libhbs-wrapper`, `libhbs-acc-wrapper`, `libhbs-pow-wrapper`, and `libhbs-acc-pow-wrapper`.

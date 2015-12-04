@@ -13,7 +13,7 @@ import java.nio.ByteBuffer;
  * 
  * @author Connor Imes
  */
-public class DefaultHeartbeatJNI extends AbstractDefaultHeartbeatJNI implements Heartbeat {
+public class DefaultHeartbeat extends AbstractDefaultHeartbeat implements Heartbeat {
 
 	/**
 	 * Don't allow public instantiation. Should use {@link #create(int)} which
@@ -21,7 +21,7 @@ public class DefaultHeartbeatJNI extends AbstractDefaultHeartbeatJNI implements 
 	 * 
 	 * @param nativePtr
 	 */
-	protected DefaultHeartbeatJNI(final ByteBuffer nativePtr) {
+	protected DefaultHeartbeat(final ByteBuffer nativePtr) {
 		this(nativePtr, null);
 	}
 
@@ -32,36 +32,36 @@ public class DefaultHeartbeatJNI extends AbstractDefaultHeartbeatJNI implements 
 	 * @param nativePtr
 	 * @param logStream
 	 */
-	protected DefaultHeartbeatJNI(final ByteBuffer nativePtr, final FileOutputStream logStream) {
+	protected DefaultHeartbeat(final ByteBuffer nativePtr, final FileOutputStream logStream) {
 		super(nativePtr, logStream);
 	}
 
 	/**
-	 * Create a {@link DefaultHeartbeatJNI}.
+	 * Create a {@link DefaultHeartbeat}.
 	 * 
 	 * @param windowSize
 	 * @throws IllegalStateException
 	 *             if native resources cannot be allocated
 	 */
-	public static DefaultHeartbeatJNI create(final int windowSize) {
+	public static DefaultHeartbeat create(final int windowSize) {
 		return create(windowSize, null);
 	}
 
 	/**
-	 * Create a {@link DefaultHeartbeatJNI}.
+	 * Create a {@link DefaultHeartbeat}.
 	 * 
 	 * @param windowSize
 	 * @param logStream
 	 * @throws IllegalStateException
 	 *             if native resources cannot be allocated
 	 */
-	public static DefaultHeartbeatJNI create(final int windowSize, final FileOutputStream logStream) {
+	public static DefaultHeartbeat create(final int windowSize, final FileOutputStream logStream) {
 		try {
-			final ByteBuffer ptr = HeartbeatJNI.get().heartbeatInit(windowSize, getFileDescriptor(logStream));
+			final ByteBuffer ptr = HeartbeatJNI.get().init(windowSize, getFileDescriptor(logStream));
 			if (ptr == null) {
 				throw new IllegalStateException("Failed to get heartbeat over JNI");
 			}
-			return new DefaultHeartbeatJNI(ptr, logStream);
+			return new DefaultHeartbeat(ptr, logStream);
 		} catch (IOException e) {
 			throw new IllegalStateException("Failed to get file descriptor");
 		}
@@ -78,7 +78,7 @@ public class DefaultHeartbeatJNI extends AbstractDefaultHeartbeatJNI implements 
 	}
 
 	protected void finishUnchecked() {
-		HeartbeatJNI.get().heartbeatFinish(nativePtr);
+		HeartbeatJNI.get().finish(nativePtr);
 		nativePtr = null;
 	}
 
@@ -97,7 +97,7 @@ public class DefaultHeartbeatJNI extends AbstractDefaultHeartbeatJNI implements 
 			lock.readLock().lock();
 			enforceNotFinished();
 			if (logStream != null) {
-				if (HeartbeatJNI.get().heartbeatLogHeader(getFileDescriptor(logStream)) != 0) {
+				if (HeartbeatJNI.get().logHeader(getFileDescriptor(logStream)) != 0) {
 					throw new IOException("Failed to write log header");
 				}
 			}
@@ -111,7 +111,7 @@ public class DefaultHeartbeatJNI extends AbstractDefaultHeartbeatJNI implements 
 			lock.readLock().lock();
 			enforceNotFinished();
 			if (logStream != null) {
-				if (HeartbeatJNI.get().heartbeatLogWindowBuffer(nativePtr, getFileDescriptor(logStream)) != 0) {
+				if (HeartbeatJNI.get().logWindowBuffer(nativePtr, getFileDescriptor(logStream)) != 0) {
 					throw new IOException("Failed to write window buffer");
 				}
 			}
@@ -124,7 +124,7 @@ public class DefaultHeartbeatJNI extends AbstractDefaultHeartbeatJNI implements 
 		try {
 			lock.readLock().lock();
 			enforceNotFinished();
-			return HeartbeatJNI.get().heartbeatGetWindowSize(nativePtr);
+			return HeartbeatJNI.get().getWindowSize(nativePtr);
 		} finally {
 			lock.readLock().unlock();
 		}
@@ -134,7 +134,7 @@ public class DefaultHeartbeatJNI extends AbstractDefaultHeartbeatJNI implements 
 		try {
 			lock.readLock().lock();
 			enforceNotFinished();
-			return HeartbeatJNI.get().heartbeatGetUserTag(nativePtr);
+			return HeartbeatJNI.get().getUserTag(nativePtr);
 		} finally {
 			lock.readLock().unlock();
 		}
@@ -144,7 +144,7 @@ public class DefaultHeartbeatJNI extends AbstractDefaultHeartbeatJNI implements 
 		try {
 			lock.readLock().lock();
 			enforceNotFinished();
-			return HeartbeatJNI.get().heartbeatGetGlobalTime(nativePtr);
+			return HeartbeatJNI.get().getGlobalTime(nativePtr);
 		} finally {
 			lock.readLock().unlock();
 		}
@@ -154,7 +154,7 @@ public class DefaultHeartbeatJNI extends AbstractDefaultHeartbeatJNI implements 
 		try {
 			lock.readLock().lock();
 			enforceNotFinished();
-			return HeartbeatJNI.get().heartbeatGetWindowTime(nativePtr);
+			return HeartbeatJNI.get().getWindowTime(nativePtr);
 		} finally {
 			lock.readLock().unlock();
 		}
@@ -164,7 +164,7 @@ public class DefaultHeartbeatJNI extends AbstractDefaultHeartbeatJNI implements 
 		try {
 			lock.readLock().lock();
 			enforceNotFinished();
-			return HeartbeatJNI.get().heartbeatGetGlobalWork(nativePtr);
+			return HeartbeatJNI.get().getGlobalWork(nativePtr);
 		} finally {
 			lock.readLock().unlock();
 		}
@@ -174,7 +174,7 @@ public class DefaultHeartbeatJNI extends AbstractDefaultHeartbeatJNI implements 
 		try {
 			lock.readLock().lock();
 			enforceNotFinished();
-			return HeartbeatJNI.get().heartbeatGetWindowWork(nativePtr);
+			return HeartbeatJNI.get().getWindowWork(nativePtr);
 		} finally {
 			lock.readLock().unlock();
 		}
@@ -184,7 +184,7 @@ public class DefaultHeartbeatJNI extends AbstractDefaultHeartbeatJNI implements 
 		try {
 			lock.readLock().lock();
 			enforceNotFinished();
-			return HeartbeatJNI.get().heartbeatGetGlobalPerf(nativePtr);
+			return HeartbeatJNI.get().getGlobalPerf(nativePtr);
 		} finally {
 			lock.readLock().unlock();
 		}
@@ -194,7 +194,7 @@ public class DefaultHeartbeatJNI extends AbstractDefaultHeartbeatJNI implements 
 		try {
 			lock.readLock().lock();
 			enforceNotFinished();
-			return HeartbeatJNI.get().heartbeatGetWindowPerf(nativePtr);
+			return HeartbeatJNI.get().getWindowPerf(nativePtr);
 		} finally {
 			lock.readLock().unlock();
 		}
@@ -204,7 +204,7 @@ public class DefaultHeartbeatJNI extends AbstractDefaultHeartbeatJNI implements 
 		try {
 			lock.readLock().lock();
 			enforceNotFinished();
-			return HeartbeatJNI.get().heartbeatGetInstantPerf(nativePtr);
+			return HeartbeatJNI.get().getInstantPerf(nativePtr);
 		} finally {
 			lock.readLock().unlock();
 		}

@@ -13,7 +13,7 @@ import java.nio.ByteBuffer;
  * 
  * @author Connor Imes
  */
-public class DefaultHeartbeatAccuracyPowerJNI extends AbstractDefaultHeartbeatJNI implements HeartbeatAccuracyPower {
+public class DefaultHeartbeatPower extends AbstractDefaultHeartbeat implements HeartbeatPower {
 
 	/**
 	 * Don't allow public instantiation. Should use {@link #create(int)} which
@@ -21,7 +21,7 @@ public class DefaultHeartbeatAccuracyPowerJNI extends AbstractDefaultHeartbeatJN
 	 * 
 	 * @param nativePtr
 	 */
-	protected DefaultHeartbeatAccuracyPowerJNI(final ByteBuffer nativePtr) {
+	protected DefaultHeartbeatPower(final ByteBuffer nativePtr) {
 		this(nativePtr, null);
 	}
 
@@ -32,70 +32,58 @@ public class DefaultHeartbeatAccuracyPowerJNI extends AbstractDefaultHeartbeatJN
 	 * @param nativePtr
 	 * @param logStream
 	 */
-	protected DefaultHeartbeatAccuracyPowerJNI(final ByteBuffer nativePtr, final FileOutputStream logStream) {
+	protected DefaultHeartbeatPower(final ByteBuffer nativePtr, final FileOutputStream logStream) {
 		super(nativePtr, logStream);
 	}
 
 	/**
-	 * Create a {@link DefaultHeartbeatAccuracyPowerJNI}.
+	 * Create a {@link DefaultHeartbeatPower}.
 	 * 
 	 * @param windowSize
 	 * @throws IllegalStateException
 	 *             if native resources cannot be allocated
 	 */
-	public static DefaultHeartbeatAccuracyPowerJNI create(final int windowSize) {
+	public static DefaultHeartbeatPower create(final int windowSize) {
 		return create(windowSize, null);
 	}
 
 	/**
-	 * Create a {@link DefaultHeartbeatAccuracyPowerJNI}.
+	 * Create a {@link DefaultHeartbeatPower}.
 	 * 
 	 * @param windowSize
 	 * @param logStream
 	 * @throws IllegalStateException
 	 *             if native resources cannot be allocated
 	 */
-	public static DefaultHeartbeatAccuracyPowerJNI create(final int windowSize, final FileOutputStream logStream) {
+	public static DefaultHeartbeatPower create(final int windowSize, final FileOutputStream logStream) {
 		try {
-			final ByteBuffer ptr = HeartbeatAccPowJNI.get().heartbeatAccPowInit(windowSize,
-					getFileDescriptor(logStream));
+			final ByteBuffer ptr = HeartbeatPowJNI.get().init(windowSize, getFileDescriptor(logStream));
 			if (ptr == null) {
 				throw new IllegalStateException("Failed to get heartbeat over JNI");
 			}
-			return new DefaultHeartbeatAccuracyPowerJNI(ptr, logStream);
+			return new DefaultHeartbeatPower(ptr, logStream);
 		} catch (IOException e) {
 			throw new IllegalStateException("Failed to get file descriptor");
 		}
 	}
 
 	public void heartbeat(final long userTag, final long work, final long startTime, final long endTime,
-			final long accuracy, final long startEnergy, long endEnergy) {
+			final long startEnergy, final long endEnergy) {
 		try {
 			lock.readLock().lock();
 			enforceNotFinished();
-			HeartbeatAccPowJNI.get().heartbeatAccPow(nativePtr, userTag, work, startTime, endTime, accuracy,
-					startEnergy, endEnergy);
+			HeartbeatPowJNI.get().heartbeat(nativePtr, userTag, work, startTime, endTime, startEnergy, endEnergy);
 		} finally {
 			lock.readLock().unlock();
 		}
 	}
 
-	public void heartbeat(final long userTag, final long work, final long startTime, final long endTime,
-			final long startEnergy, final long endEnergy) {
-		heartbeat(userTag, work, startTime, endTime, 0, startEnergy, endEnergy);
-	}
-
-	public void heartbeat(final long userTag, final long work, final long startTime, final long endTime,
-			final long accuracy) {
-		heartbeat(userTag, work, startTime, endTime, accuracy, 0, 0);
-	}
-
-	public void heartbeat(long userTag, long work, long startTime, long endTime) {
-		heartbeat(userTag, work, startTime, endTime, 0, 0, 0);
+	public void heartbeat(final long userTag, final long work, final long startTime, final long endTime) {
+		heartbeat(userTag, work, startTime, endTime, 0, 0);
 	}
 
 	protected void finishUnchecked() {
-		HeartbeatAccPowJNI.get().heartbeatAccPowFinish(nativePtr);
+		HeartbeatPowJNI.get().finish(nativePtr);
 		nativePtr = null;
 	}
 
@@ -114,7 +102,7 @@ public class DefaultHeartbeatAccuracyPowerJNI extends AbstractDefaultHeartbeatJN
 			lock.readLock().lock();
 			enforceNotFinished();
 			if (logStream != null) {
-				if (HeartbeatAccPowJNI.get().heartbeatAccPowLogHeader(getFileDescriptor(logStream)) != 0) {
+				if (HeartbeatPowJNI.get().logHeader(getFileDescriptor(logStream)) != 0) {
 					throw new IOException("Failed to write log header");
 				}
 			}
@@ -128,8 +116,7 @@ public class DefaultHeartbeatAccuracyPowerJNI extends AbstractDefaultHeartbeatJN
 			lock.readLock().lock();
 			enforceNotFinished();
 			if (logStream != null) {
-				if (HeartbeatAccPowJNI.get().heartbeatAccPowLogWindowBuffer(nativePtr,
-						getFileDescriptor(logStream)) != 0) {
+				if (HeartbeatPowJNI.get().logWindowBuffer(nativePtr, getFileDescriptor(logStream)) != 0) {
 					throw new IOException("Failed to write window buffer");
 				}
 			}
@@ -142,7 +129,7 @@ public class DefaultHeartbeatAccuracyPowerJNI extends AbstractDefaultHeartbeatJN
 		try {
 			lock.readLock().lock();
 			enforceNotFinished();
-			return HeartbeatAccPowJNI.get().heartbeatAccPowGetWindowSize(nativePtr);
+			return HeartbeatPowJNI.get().getWindowSize(nativePtr);
 		} finally {
 			lock.readLock().unlock();
 		}
@@ -152,7 +139,7 @@ public class DefaultHeartbeatAccuracyPowerJNI extends AbstractDefaultHeartbeatJN
 		try {
 			lock.readLock().lock();
 			enforceNotFinished();
-			return HeartbeatAccPowJNI.get().heartbeatAccPowGetUserTag(nativePtr);
+			return HeartbeatPowJNI.get().getUserTag(nativePtr);
 		} finally {
 			lock.readLock().unlock();
 		}
@@ -162,7 +149,7 @@ public class DefaultHeartbeatAccuracyPowerJNI extends AbstractDefaultHeartbeatJN
 		try {
 			lock.readLock().lock();
 			enforceNotFinished();
-			return HeartbeatAccPowJNI.get().heartbeatAccPowGetGlobalTime(nativePtr);
+			return HeartbeatPowJNI.get().getGlobalTime(nativePtr);
 		} finally {
 			lock.readLock().unlock();
 		}
@@ -172,7 +159,7 @@ public class DefaultHeartbeatAccuracyPowerJNI extends AbstractDefaultHeartbeatJN
 		try {
 			lock.readLock().lock();
 			enforceNotFinished();
-			return HeartbeatAccPowJNI.get().heartbeatAccPowGetWindowTime(nativePtr);
+			return HeartbeatPowJNI.get().getWindowTime(nativePtr);
 		} finally {
 			lock.readLock().unlock();
 		}
@@ -182,7 +169,7 @@ public class DefaultHeartbeatAccuracyPowerJNI extends AbstractDefaultHeartbeatJN
 		try {
 			lock.readLock().lock();
 			enforceNotFinished();
-			return HeartbeatAccPowJNI.get().heartbeatAccPowGetGlobalWork(nativePtr);
+			return HeartbeatPowJNI.get().getGlobalWork(nativePtr);
 		} finally {
 			lock.readLock().unlock();
 		}
@@ -192,7 +179,7 @@ public class DefaultHeartbeatAccuracyPowerJNI extends AbstractDefaultHeartbeatJN
 		try {
 			lock.readLock().lock();
 			enforceNotFinished();
-			return HeartbeatAccPowJNI.get().heartbeatAccPowGetWindowWork(nativePtr);
+			return HeartbeatPowJNI.get().getWindowWork(nativePtr);
 		} finally {
 			lock.readLock().unlock();
 		}
@@ -202,7 +189,7 @@ public class DefaultHeartbeatAccuracyPowerJNI extends AbstractDefaultHeartbeatJN
 		try {
 			lock.readLock().lock();
 			enforceNotFinished();
-			return HeartbeatAccPowJNI.get().heartbeatAccPowGetGlobalPerf(nativePtr);
+			return HeartbeatPowJNI.get().getGlobalPerf(nativePtr);
 		} finally {
 			lock.readLock().unlock();
 		}
@@ -212,7 +199,7 @@ public class DefaultHeartbeatAccuracyPowerJNI extends AbstractDefaultHeartbeatJN
 		try {
 			lock.readLock().lock();
 			enforceNotFinished();
-			return HeartbeatAccPowJNI.get().heartbeatAccPowGetWindowPerf(nativePtr);
+			return HeartbeatPowJNI.get().getWindowPerf(nativePtr);
 		} finally {
 			lock.readLock().unlock();
 		}
@@ -222,57 +209,7 @@ public class DefaultHeartbeatAccuracyPowerJNI extends AbstractDefaultHeartbeatJN
 		try {
 			lock.readLock().lock();
 			enforceNotFinished();
-			return HeartbeatAccPowJNI.get().heartbeatAccPowGetInstantPerf(nativePtr);
-		} finally {
-			lock.readLock().unlock();
-		}
-	}
-
-	public long getGlobalAccuracy() {
-		try {
-			lock.readLock().lock();
-			enforceNotFinished();
-			return HeartbeatAccPowJNI.get().heartbeatAccPowGetGlobalAccuracy(nativePtr);
-		} finally {
-			lock.readLock().unlock();
-		}
-	}
-
-	public long getWindowAccuracy() {
-		try {
-			lock.readLock().lock();
-			enforceNotFinished();
-			return HeartbeatAccPowJNI.get().heartbeatAccPowGetWindowAccuracy(nativePtr);
-		} finally {
-			lock.readLock().unlock();
-		}
-	}
-
-	public double getGlobalAccuracyRate() {
-		try {
-			lock.readLock().lock();
-			enforceNotFinished();
-			return HeartbeatAccPowJNI.get().heartbeatAccPowGetGlobalAccuracyRate(nativePtr);
-		} finally {
-			lock.readLock().unlock();
-		}
-	}
-
-	public double getWindowAccuracyRate() {
-		try {
-			lock.readLock().lock();
-			enforceNotFinished();
-			return HeartbeatAccPowJNI.get().heartbeatAccPowGetWindowAccuracyRate(nativePtr);
-		} finally {
-			lock.readLock().unlock();
-		}
-	}
-
-	public double getInstantAccuracyRate() {
-		try {
-			lock.readLock().lock();
-			enforceNotFinished();
-			return HeartbeatAccPowJNI.get().heartbeatAccPowGetInstantAccuracyRate(nativePtr);
+			return HeartbeatPowJNI.get().getInstantPerf(nativePtr);
 		} finally {
 			lock.readLock().unlock();
 		}
@@ -282,7 +219,7 @@ public class DefaultHeartbeatAccuracyPowerJNI extends AbstractDefaultHeartbeatJN
 		try {
 			lock.readLock().lock();
 			enforceNotFinished();
-			return HeartbeatAccPowJNI.get().heartbeatAccPowGetGlobalEnergy(nativePtr);
+			return HeartbeatPowJNI.get().getGlobalEnergy(nativePtr);
 		} finally {
 			lock.readLock().unlock();
 		}
@@ -292,7 +229,7 @@ public class DefaultHeartbeatAccuracyPowerJNI extends AbstractDefaultHeartbeatJN
 		try {
 			lock.readLock().lock();
 			enforceNotFinished();
-			return HeartbeatAccPowJNI.get().heartbeatAccPowGetWindowEnergy(nativePtr);
+			return HeartbeatPowJNI.get().getWindowEnergy(nativePtr);
 		} finally {
 			lock.readLock().unlock();
 		}
@@ -302,7 +239,7 @@ public class DefaultHeartbeatAccuracyPowerJNI extends AbstractDefaultHeartbeatJN
 		try {
 			lock.readLock().lock();
 			enforceNotFinished();
-			return HeartbeatAccPowJNI.get().heartbeatAccPowGetGlobalPower(nativePtr);
+			return HeartbeatPowJNI.get().getGlobalPower(nativePtr);
 		} finally {
 			lock.readLock().unlock();
 		}
@@ -312,7 +249,7 @@ public class DefaultHeartbeatAccuracyPowerJNI extends AbstractDefaultHeartbeatJN
 		try {
 			lock.readLock().lock();
 			enforceNotFinished();
-			return HeartbeatAccPowJNI.get().heartbeatAccPowGetWindowPower(nativePtr);
+			return HeartbeatPowJNI.get().getWindowPower(nativePtr);
 		} finally {
 			lock.readLock().unlock();
 		}
@@ -322,7 +259,7 @@ public class DefaultHeartbeatAccuracyPowerJNI extends AbstractDefaultHeartbeatJN
 		try {
 			lock.readLock().lock();
 			enforceNotFinished();
-			return HeartbeatAccPowJNI.get().heartbeatAccPowGetInstantPower(nativePtr);
+			return HeartbeatPowJNI.get().getInstantPower(nativePtr);
 		} finally {
 			lock.readLock().unlock();
 		}

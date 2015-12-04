@@ -46,13 +46,13 @@ public class DefaultHeartbeatTest {
 		assertTrue("getGlobalPerf", hb.getGlobalPerf() > 0);
 		assertTrue("getWindowPerf", hb.getWindowPerf() > 0);
 		assertTrue("getInstantPerf", hb.getInstantPerf() > 0);
-		hb.finish();
+		hb.dispose();
 	}
 
 	@Test(expected = IllegalStateException.class)
-	public void test_access_after_finish() {
+	public void test_access_after_dispose() {
 		Heartbeat hb = DefaultHeartbeat.create(WINDOW_SIZE, null);
-		hb.finish();
+		hb.dispose();
 		// too cumbersome to try all methods, just do one
 		hb.getWindowSize();
 	}

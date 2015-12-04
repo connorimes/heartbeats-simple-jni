@@ -8,7 +8,7 @@ import java.nio.ByteBuffer;
  * Gets a heartbeat implementation and exposes methods for performing operations
  * on it. This implementation is a simple wrapper around the JNI functions.
  * 
- * Attempting to perform operations after {@link #finish()} is called will
+ * Attempting to perform operations after {@link #dispose()} is called will
  * result in an {@link IllegalStateException}.
  * 
  * @author Connor Imes
@@ -71,7 +71,7 @@ public class DefaultHeartbeatPower extends AbstractDefaultHeartbeat implements H
 			final long startEnergy, final long endEnergy) {
 		try {
 			lock.readLock().lock();
-			enforceNotFinished();
+			enforceNotDisposed();
 			HeartbeatPowJNI.get().heartbeat(nativePtr, userTag, work, startTime, endTime, startEnergy, endEnergy);
 		} finally {
 			lock.readLock().unlock();
@@ -82,16 +82,16 @@ public class DefaultHeartbeatPower extends AbstractDefaultHeartbeat implements H
 		heartbeat(userTag, work, startTime, endTime, 0, 0);
 	}
 
-	protected void finishUnchecked() {
-		HeartbeatPowJNI.get().finish(nativePtr);
+	protected void free() {
+		HeartbeatPowJNI.get().free(nativePtr);
 		nativePtr = null;
 	}
 
-	public void finish() {
+	public void dispose() {
 		try {
 			lock.writeLock().lock();
-			enforceNotFinished();
-			finishUnchecked();
+			enforceNotDisposed();
+			free();
 		} finally {
 			lock.writeLock().unlock();
 		}
@@ -100,7 +100,7 @@ public class DefaultHeartbeatPower extends AbstractDefaultHeartbeat implements H
 	public void logHeader() throws IOException {
 		try {
 			lock.readLock().lock();
-			enforceNotFinished();
+			enforceNotDisposed();
 			if (logStream != null) {
 				if (HeartbeatPowJNI.get().logHeader(getFileDescriptor(logStream)) != 0) {
 					throw new IOException("Failed to write log header");
@@ -114,7 +114,7 @@ public class DefaultHeartbeatPower extends AbstractDefaultHeartbeat implements H
 	public void logWindowBuffer() throws IOException {
 		try {
 			lock.readLock().lock();
-			enforceNotFinished();
+			enforceNotDisposed();
 			if (logStream != null) {
 				if (HeartbeatPowJNI.get().logWindowBuffer(nativePtr, getFileDescriptor(logStream)) != 0) {
 					throw new IOException("Failed to write window buffer");
@@ -128,7 +128,7 @@ public class DefaultHeartbeatPower extends AbstractDefaultHeartbeat implements H
 	public long getWindowSize() {
 		try {
 			lock.readLock().lock();
-			enforceNotFinished();
+			enforceNotDisposed();
 			return HeartbeatPowJNI.get().getWindowSize(nativePtr);
 		} finally {
 			lock.readLock().unlock();
@@ -138,7 +138,7 @@ public class DefaultHeartbeatPower extends AbstractDefaultHeartbeat implements H
 	public long getUserTag() {
 		try {
 			lock.readLock().lock();
-			enforceNotFinished();
+			enforceNotDisposed();
 			return HeartbeatPowJNI.get().getUserTag(nativePtr);
 		} finally {
 			lock.readLock().unlock();
@@ -148,7 +148,7 @@ public class DefaultHeartbeatPower extends AbstractDefaultHeartbeat implements H
 	public long getGlobalTime() {
 		try {
 			lock.readLock().lock();
-			enforceNotFinished();
+			enforceNotDisposed();
 			return HeartbeatPowJNI.get().getGlobalTime(nativePtr);
 		} finally {
 			lock.readLock().unlock();
@@ -158,7 +158,7 @@ public class DefaultHeartbeatPower extends AbstractDefaultHeartbeat implements H
 	public long getWindowTime() {
 		try {
 			lock.readLock().lock();
-			enforceNotFinished();
+			enforceNotDisposed();
 			return HeartbeatPowJNI.get().getWindowTime(nativePtr);
 		} finally {
 			lock.readLock().unlock();
@@ -168,7 +168,7 @@ public class DefaultHeartbeatPower extends AbstractDefaultHeartbeat implements H
 	public long getGlobalWork() {
 		try {
 			lock.readLock().lock();
-			enforceNotFinished();
+			enforceNotDisposed();
 			return HeartbeatPowJNI.get().getGlobalWork(nativePtr);
 		} finally {
 			lock.readLock().unlock();
@@ -178,7 +178,7 @@ public class DefaultHeartbeatPower extends AbstractDefaultHeartbeat implements H
 	public long getWindowWork() {
 		try {
 			lock.readLock().lock();
-			enforceNotFinished();
+			enforceNotDisposed();
 			return HeartbeatPowJNI.get().getWindowWork(nativePtr);
 		} finally {
 			lock.readLock().unlock();
@@ -188,7 +188,7 @@ public class DefaultHeartbeatPower extends AbstractDefaultHeartbeat implements H
 	public double getGlobalPerf() {
 		try {
 			lock.readLock().lock();
-			enforceNotFinished();
+			enforceNotDisposed();
 			return HeartbeatPowJNI.get().getGlobalPerf(nativePtr);
 		} finally {
 			lock.readLock().unlock();
@@ -198,7 +198,7 @@ public class DefaultHeartbeatPower extends AbstractDefaultHeartbeat implements H
 	public double getWindowPerf() {
 		try {
 			lock.readLock().lock();
-			enforceNotFinished();
+			enforceNotDisposed();
 			return HeartbeatPowJNI.get().getWindowPerf(nativePtr);
 		} finally {
 			lock.readLock().unlock();
@@ -208,7 +208,7 @@ public class DefaultHeartbeatPower extends AbstractDefaultHeartbeat implements H
 	public double getInstantPerf() {
 		try {
 			lock.readLock().lock();
-			enforceNotFinished();
+			enforceNotDisposed();
 			return HeartbeatPowJNI.get().getInstantPerf(nativePtr);
 		} finally {
 			lock.readLock().unlock();
@@ -218,7 +218,7 @@ public class DefaultHeartbeatPower extends AbstractDefaultHeartbeat implements H
 	public long getGlobalEnergy() {
 		try {
 			lock.readLock().lock();
-			enforceNotFinished();
+			enforceNotDisposed();
 			return HeartbeatPowJNI.get().getGlobalEnergy(nativePtr);
 		} finally {
 			lock.readLock().unlock();
@@ -228,7 +228,7 @@ public class DefaultHeartbeatPower extends AbstractDefaultHeartbeat implements H
 	public long getWindowEnergy() {
 		try {
 			lock.readLock().lock();
-			enforceNotFinished();
+			enforceNotDisposed();
 			return HeartbeatPowJNI.get().getWindowEnergy(nativePtr);
 		} finally {
 			lock.readLock().unlock();
@@ -238,7 +238,7 @@ public class DefaultHeartbeatPower extends AbstractDefaultHeartbeat implements H
 	public double getGlobalPower() {
 		try {
 			lock.readLock().lock();
-			enforceNotFinished();
+			enforceNotDisposed();
 			return HeartbeatPowJNI.get().getGlobalPower(nativePtr);
 		} finally {
 			lock.readLock().unlock();
@@ -248,7 +248,7 @@ public class DefaultHeartbeatPower extends AbstractDefaultHeartbeat implements H
 	public double getWindowPower() {
 		try {
 			lock.readLock().lock();
-			enforceNotFinished();
+			enforceNotDisposed();
 			return HeartbeatPowJNI.get().getWindowPower(nativePtr);
 		} finally {
 			lock.readLock().unlock();
@@ -258,7 +258,7 @@ public class DefaultHeartbeatPower extends AbstractDefaultHeartbeat implements H
 	public double getInstantPower() {
 		try {
 			lock.readLock().lock();
-			enforceNotFinished();
+			enforceNotDisposed();
 			return HeartbeatPowJNI.get().getInstantPower(nativePtr);
 		} finally {
 			lock.readLock().unlock();
@@ -270,7 +270,7 @@ public class DefaultHeartbeatPower extends AbstractDefaultHeartbeat implements H
 		// last-ditch effort to cleanup if user didn't follow protocol
 		try {
 			if (nativePtr != null) {
-				finishUnchecked();
+				free();
 			}
 		} finally {
 			super.finalize();

@@ -17,8 +17,6 @@ public interface HeartbeatAccuracyPower extends HeartbeatAccuracy, HeartbeatPowe
 	 * @param accuracy
 	 * @param startEnergy
 	 * @param endEnergy
-	 * @throws IllegalArgumentException
-	 *             if heartbeat fails
 	 */
 	void heartbeat(long userTag, long work, long startTime, long endTime, long accuracy, long startEnergy,
 			long endEnergy);

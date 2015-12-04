@@ -58,13 +58,13 @@ public class DefaultHeartbeatAccuracyPowerTest {
 		assertTrue("getGlobalPower", hb.getGlobalPower() > 0);
 		assertTrue("getWindowPower", hb.getWindowPower() > 0);
 		assertTrue("getInstantPower", hb.getInstantPower() > 0);
-		hb.finish();
+		hb.dispose();
 	}
 
 	@Test(expected = IllegalStateException.class)
-	public void test_access_after_finish() {
+	public void test_access_after_dispose() {
 		HeartbeatAccuracyPower hb = DefaultHeartbeatAccuracyPower.create(WINDOW_SIZE, null);
-		hb.finish();
+		hb.dispose();
 		// too cumbersome to try all methods, just do one
 		hb.getWindowSize();
 	}

@@ -16,8 +16,6 @@ public interface HeartbeatPower extends Heartbeat {
 	 * @param endTime
 	 * @param startEnergy
 	 * @param endEnergy
-	 * @throws IllegalArgumentException
-	 *             if heartbeat fails
 	 */
 	void heartbeat(long userTag, long work, long startTime, long endTime, long startEnergy, long endEnergy);
 

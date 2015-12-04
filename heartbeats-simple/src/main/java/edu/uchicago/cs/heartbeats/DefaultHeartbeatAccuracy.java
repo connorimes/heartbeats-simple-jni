@@ -8,7 +8,7 @@ import java.nio.ByteBuffer;
  * Gets a heartbeat implementation and exposes methods for performing operations
  * on it. This implementation is a simple wrapper around the JNI functions.
  * 
- * Attempting to perform operations after {@link #finish()} is called will
+ * Attempting to perform operations after {@link #dispose()} is called will
  * result in an {@link IllegalStateException}.
  * 
  * @author Connor Imes
@@ -71,7 +71,7 @@ public class DefaultHeartbeatAccuracy extends AbstractDefaultHeartbeat implement
 			final long accuracy) {
 		try {
 			lock.readLock().lock();
-			enforceNotFinished();
+			enforceNotDisposed();
 			HeartbeatAccJNI.get().heartbeat(nativePtr, userTag, work, startTime, endTime, accuracy);
 		} finally {
 			lock.readLock().unlock();
@@ -82,16 +82,16 @@ public class DefaultHeartbeatAccuracy extends AbstractDefaultHeartbeat implement
 		heartbeat(userTag, work, startTime, endTime, 0);
 	}
 
-	protected void finishUnchecked() {
-		HeartbeatAccJNI.get().finish(nativePtr);
+	protected void free() {
+		HeartbeatAccJNI.get().free(nativePtr);
 		nativePtr = null;
 	}
 
-	public void finish() {
+	public void dispose() {
 		try {
 			lock.writeLock().lock();
-			enforceNotFinished();
-			finishUnchecked();
+			enforceNotDisposed();
+			free();
 		} finally {
 			lock.writeLock().unlock();
 		}
@@ -100,7 +100,7 @@ public class DefaultHeartbeatAccuracy extends AbstractDefaultHeartbeat implement
 	public void logHeader() throws IOException {
 		try {
 			lock.readLock().lock();
-			enforceNotFinished();
+			enforceNotDisposed();
 			if (logStream != null) {
 				if (HeartbeatAccJNI.get().logHeader(getFileDescriptor(logStream)) != 0) {
 					throw new IOException("Failed to write log header");
@@ -114,7 +114,7 @@ public class DefaultHeartbeatAccuracy extends AbstractDefaultHeartbeat implement
 	public void logWindowBuffer() throws IOException {
 		try {
 			lock.readLock().lock();
-			enforceNotFinished();
+			enforceNotDisposed();
 			if (logStream != null) {
 				if (HeartbeatAccJNI.get().logWindowBuffer(nativePtr, getFileDescriptor(logStream)) != 0) {
 					throw new IOException("Failed to write window buffer");
@@ -128,7 +128,7 @@ public class DefaultHeartbeatAccuracy extends AbstractDefaultHeartbeat implement
 	public long getWindowSize() {
 		try {
 			lock.readLock().lock();
-			enforceNotFinished();
+			enforceNotDisposed();
 			return HeartbeatAccJNI.get().getWindowSize(nativePtr);
 		} finally {
 			lock.readLock().unlock();
@@ -138,7 +138,7 @@ public class DefaultHeartbeatAccuracy extends AbstractDefaultHeartbeat implement
 	public long getUserTag() {
 		try {
 			lock.readLock().lock();
-			enforceNotFinished();
+			enforceNotDisposed();
 			return HeartbeatAccJNI.get().getUserTag(nativePtr);
 		} finally {
 			lock.readLock().unlock();
@@ -148,7 +148,7 @@ public class DefaultHeartbeatAccuracy extends AbstractDefaultHeartbeat implement
 	public long getGlobalTime() {
 		try {
 			lock.readLock().lock();
-			enforceNotFinished();
+			enforceNotDisposed();
 			return HeartbeatAccJNI.get().getGlobalTime(nativePtr);
 		} finally {
 			lock.readLock().unlock();
@@ -158,7 +158,7 @@ public class DefaultHeartbeatAccuracy extends AbstractDefaultHeartbeat implement
 	public long getWindowTime() {
 		try {
 			lock.readLock().lock();
-			enforceNotFinished();
+			enforceNotDisposed();
 			return HeartbeatAccJNI.get().getWindowTime(nativePtr);
 		} finally {
 			lock.readLock().unlock();
@@ -168,7 +168,7 @@ public class DefaultHeartbeatAccuracy extends AbstractDefaultHeartbeat implement
 	public long getGlobalWork() {
 		try {
 			lock.readLock().lock();
-			enforceNotFinished();
+			enforceNotDisposed();
 			return HeartbeatAccJNI.get().getGlobalWork(nativePtr);
 		} finally {
 			lock.readLock().unlock();
@@ -178,7 +178,7 @@ public class DefaultHeartbeatAccuracy extends AbstractDefaultHeartbeat implement
 	public long getWindowWork() {
 		try {
 			lock.readLock().lock();
-			enforceNotFinished();
+			enforceNotDisposed();
 			return HeartbeatAccJNI.get().getWindowWork(nativePtr);
 		} finally {
 			lock.readLock().unlock();
@@ -188,7 +188,7 @@ public class DefaultHeartbeatAccuracy extends AbstractDefaultHeartbeat implement
 	public double getGlobalPerf() {
 		try {
 			lock.readLock().lock();
-			enforceNotFinished();
+			enforceNotDisposed();
 			return HeartbeatAccJNI.get().getGlobalPerf(nativePtr);
 		} finally {
 			lock.readLock().unlock();
@@ -198,7 +198,7 @@ public class DefaultHeartbeatAccuracy extends AbstractDefaultHeartbeat implement
 	public double getWindowPerf() {
 		try {
 			lock.readLock().lock();
-			enforceNotFinished();
+			enforceNotDisposed();
 			return HeartbeatAccJNI.get().getWindowPerf(nativePtr);
 		} finally {
 			lock.readLock().unlock();
@@ -208,7 +208,7 @@ public class DefaultHeartbeatAccuracy extends AbstractDefaultHeartbeat implement
 	public double getInstantPerf() {
 		try {
 			lock.readLock().lock();
-			enforceNotFinished();
+			enforceNotDisposed();
 			return HeartbeatAccJNI.get().getInstantPerf(nativePtr);
 		} finally {
 			lock.readLock().unlock();
@@ -218,7 +218,7 @@ public class DefaultHeartbeatAccuracy extends AbstractDefaultHeartbeat implement
 	public long getGlobalAccuracy() {
 		try {
 			lock.readLock().lock();
-			enforceNotFinished();
+			enforceNotDisposed();
 			return HeartbeatAccJNI.get().getGlobalAccuracy(nativePtr);
 		} finally {
 			lock.readLock().unlock();
@@ -228,7 +228,7 @@ public class DefaultHeartbeatAccuracy extends AbstractDefaultHeartbeat implement
 	public long getWindowAccuracy() {
 		try {
 			lock.readLock().lock();
-			enforceNotFinished();
+			enforceNotDisposed();
 			return HeartbeatAccJNI.get().getWindowAccuracy(nativePtr);
 		} finally {
 			lock.readLock().unlock();
@@ -238,7 +238,7 @@ public class DefaultHeartbeatAccuracy extends AbstractDefaultHeartbeat implement
 	public double getGlobalAccuracyRate() {
 		try {
 			lock.readLock().lock();
-			enforceNotFinished();
+			enforceNotDisposed();
 			return HeartbeatAccJNI.get().getGlobalAccuracyRate(nativePtr);
 		} finally {
 			lock.readLock().unlock();
@@ -248,7 +248,7 @@ public class DefaultHeartbeatAccuracy extends AbstractDefaultHeartbeat implement
 	public double getWindowAccuracyRate() {
 		try {
 			lock.readLock().lock();
-			enforceNotFinished();
+			enforceNotDisposed();
 			return HeartbeatAccJNI.get().getWindowAccuracyRate(nativePtr);
 		} finally {
 			lock.readLock().unlock();
@@ -258,7 +258,7 @@ public class DefaultHeartbeatAccuracy extends AbstractDefaultHeartbeat implement
 	public double getInstantAccuracyRate() {
 		try {
 			lock.readLock().lock();
-			enforceNotFinished();
+			enforceNotDisposed();
 			return HeartbeatAccJNI.get().getInstantAccuracyRate(nativePtr);
 		} finally {
 			lock.readLock().unlock();
@@ -270,7 +270,7 @@ public class DefaultHeartbeatAccuracy extends AbstractDefaultHeartbeat implement
 		// last-ditch effort to cleanup if user didn't follow protocol
 		try {
 			if (nativePtr != null) {
-				finishUnchecked();
+				free();
 			}
 		} finally {
 			super.finalize();

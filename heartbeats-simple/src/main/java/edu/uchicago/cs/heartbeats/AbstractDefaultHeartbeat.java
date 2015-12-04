@@ -45,9 +45,9 @@ public abstract class AbstractDefaultHeartbeat {
 	/**
 	 * Throws an {@link IllegalStateException} if {@link #nativePtr} is null.
 	 */
-	protected void enforceNotFinished() {
+	protected void enforceNotDisposed() {
 		if (nativePtr == null) {
-			throw new IllegalStateException("Already finished");
+			throw new IllegalStateException("Already disposed");
 		}
 	}
 

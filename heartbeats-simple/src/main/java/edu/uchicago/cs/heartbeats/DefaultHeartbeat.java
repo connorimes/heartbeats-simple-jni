@@ -8,7 +8,7 @@ import java.nio.ByteBuffer;
  * Gets a heartbeat implementation and exposes methods for performing operations
  * on it. This implementation is a simple wrapper around the JNI functions.
  * 
- * ttempting to perform operations after {@link #finish()} is called will result
+ * ttempting to perform operations after {@link #dispose()} is called will result
  * in an {@link IllegalStateException}.
  * 
  * @author Connor Imes
@@ -70,23 +70,23 @@ public class DefaultHeartbeat extends AbstractDefaultHeartbeat implements Heartb
 	public void heartbeat(final long userTag, final long work, final long startTime, final long endTime) {
 		try {
 			lock.readLock().lock();
-			enforceNotFinished();
+			enforceNotDisposed();
 			HeartbeatJNI.get().heartbeat(nativePtr, userTag, work, startTime, endTime);
 		} finally {
 			lock.readLock().unlock();
 		}
 	}
 
-	protected void finishUnchecked() {
-		HeartbeatJNI.get().finish(nativePtr);
+	protected void free() {
+		HeartbeatJNI.get().free(nativePtr);
 		nativePtr = null;
 	}
 
-	public void finish() {
+	public void dispose() {
 		try {
 			lock.writeLock().lock();
-			enforceNotFinished();
-			finishUnchecked();
+			enforceNotDisposed();
+			free();
 		} finally {
 			lock.writeLock().unlock();
 		}
@@ -95,7 +95,7 @@ public class DefaultHeartbeat extends AbstractDefaultHeartbeat implements Heartb
 	public void logHeader() throws IOException {
 		try {
 			lock.readLock().lock();
-			enforceNotFinished();
+			enforceNotDisposed();
 			if (logStream != null) {
 				if (HeartbeatJNI.get().logHeader(getFileDescriptor(logStream)) != 0) {
 					throw new IOException("Failed to write log header");
@@ -109,7 +109,7 @@ public class DefaultHeartbeat extends AbstractDefaultHeartbeat implements Heartb
 	public void logWindowBuffer() throws IOException {
 		try {
 			lock.readLock().lock();
-			enforceNotFinished();
+			enforceNotDisposed();
 			if (logStream != null) {
 				if (HeartbeatJNI.get().logWindowBuffer(nativePtr, getFileDescriptor(logStream)) != 0) {
 					throw new IOException("Failed to write window buffer");
@@ -123,7 +123,7 @@ public class DefaultHeartbeat extends AbstractDefaultHeartbeat implements Heartb
 	public long getWindowSize() {
 		try {
 			lock.readLock().lock();
-			enforceNotFinished();
+			enforceNotDisposed();
 			return HeartbeatJNI.get().getWindowSize(nativePtr);
 		} finally {
 			lock.readLock().unlock();
@@ -133,7 +133,7 @@ public class DefaultHeartbeat extends AbstractDefaultHeartbeat implements Heartb
 	public long getUserTag() {
 		try {
 			lock.readLock().lock();
-			enforceNotFinished();
+			enforceNotDisposed();
 			return HeartbeatJNI.get().getUserTag(nativePtr);
 		} finally {
 			lock.readLock().unlock();
@@ -143,7 +143,7 @@ public class DefaultHeartbeat extends AbstractDefaultHeartbeat implements Heartb
 	public long getGlobalTime() {
 		try {
 			lock.readLock().lock();
-			enforceNotFinished();
+			enforceNotDisposed();
 			return HeartbeatJNI.get().getGlobalTime(nativePtr);
 		} finally {
 			lock.readLock().unlock();
@@ -153,7 +153,7 @@ public class DefaultHeartbeat extends AbstractDefaultHeartbeat implements Heartb
 	public long getWindowTime() {
 		try {
 			lock.readLock().lock();
-			enforceNotFinished();
+			enforceNotDisposed();
 			return HeartbeatJNI.get().getWindowTime(nativePtr);
 		} finally {
 			lock.readLock().unlock();
@@ -163,7 +163,7 @@ public class DefaultHeartbeat extends AbstractDefaultHeartbeat implements Heartb
 	public long getGlobalWork() {
 		try {
 			lock.readLock().lock();
-			enforceNotFinished();
+			enforceNotDisposed();
 			return HeartbeatJNI.get().getGlobalWork(nativePtr);
 		} finally {
 			lock.readLock().unlock();
@@ -173,7 +173,7 @@ public class DefaultHeartbeat extends AbstractDefaultHeartbeat implements Heartb
 	public long getWindowWork() {
 		try {
 			lock.readLock().lock();
-			enforceNotFinished();
+			enforceNotDisposed();
 			return HeartbeatJNI.get().getWindowWork(nativePtr);
 		} finally {
 			lock.readLock().unlock();
@@ -183,7 +183,7 @@ public class DefaultHeartbeat extends AbstractDefaultHeartbeat implements Heartb
 	public double getGlobalPerf() {
 		try {
 			lock.readLock().lock();
-			enforceNotFinished();
+			enforceNotDisposed();
 			return HeartbeatJNI.get().getGlobalPerf(nativePtr);
 		} finally {
 			lock.readLock().unlock();
@@ -193,7 +193,7 @@ public class DefaultHeartbeat extends AbstractDefaultHeartbeat implements Heartb
 	public double getWindowPerf() {
 		try {
 			lock.readLock().lock();
-			enforceNotFinished();
+			enforceNotDisposed();
 			return HeartbeatJNI.get().getWindowPerf(nativePtr);
 		} finally {
 			lock.readLock().unlock();
@@ -203,7 +203,7 @@ public class DefaultHeartbeat extends AbstractDefaultHeartbeat implements Heartb
 	public double getInstantPerf() {
 		try {
 			lock.readLock().lock();
-			enforceNotFinished();
+			enforceNotDisposed();
 			return HeartbeatJNI.get().getInstantPerf(nativePtr);
 		} finally {
 			lock.readLock().unlock();
@@ -215,7 +215,7 @@ public class DefaultHeartbeat extends AbstractDefaultHeartbeat implements Heartb
 		// last-ditch effort to cleanup if user didn't follow protocol
 		try {
 			if (nativePtr != null) {
-				finishUnchecked();
+				free();
 			}
 		} finally {
 			super.finalize();

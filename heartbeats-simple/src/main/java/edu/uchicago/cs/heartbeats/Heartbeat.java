@@ -5,7 +5,7 @@ import java.io.IOException;
 /**
  * Abstraction for Heartbeat implementation over JNI.
  * 
- * You must call {@link #finish()} before dropping the instance and allowing it
+ * You must call {@link #dispose()} before dropping the instance and allowing it
  * to be garbage collected.
  * 
  * @author Connor Imes
@@ -19,18 +19,13 @@ public interface Heartbeat {
 	 * @param work
 	 * @param startTime
 	 * @param endTime
-	 * @throws IllegalArgumentException
-	 *             if heartbeat fails
 	 */
 	void heartbeat(long userTag, long work, long startTime, long endTime);
 
 	/**
 	 * Free memory allocations, etc.
-	 * 
-	 * @throws IllegalStateException
-	 *             if already finished
 	 */
-	void finish();
+	void dispose();
 
 	/**
 	 * Write the header text to a log file.
@@ -42,8 +37,6 @@ public interface Heartbeat {
 	/**
 	 * Logs the circular window buffer up to the current read index.
 	 *
-	 * @throws IllegalStateException
-	 *             if already finished
 	 * @throws IOException
 	 */
 	void logWindowBuffer() throws IOException;

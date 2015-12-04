@@ -52,13 +52,13 @@ public class DefaultHeartbeatAccuracyTest {
 		assertTrue("getGlobalAccuracyRate", hb.getGlobalAccuracyRate() > 0);
 		assertTrue("getWindowAccuracyRate", hb.getWindowAccuracyRate() > 0);
 		assertTrue("getInstantAccuracyRate", hb.getInstantAccuracyRate() > 0);
-		hb.finish();
+		hb.dispose();
 	}
 
 	@Test(expected = IllegalStateException.class)
-	public void test_access_after_finish() {
+	public void test_access_after_dipose() {
 		HeartbeatAccuracy hb = DefaultHeartbeatAccuracy.create(WINDOW_SIZE, null);
-		hb.finish();
+		hb.dispose();
 		// too cumbersome to try all methods, just do one
 		hb.getWindowSize();
 	}

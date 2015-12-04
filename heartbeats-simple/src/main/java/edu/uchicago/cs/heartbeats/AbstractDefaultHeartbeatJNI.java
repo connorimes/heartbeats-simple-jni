@@ -5,6 +5,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * Common variables and utilities for the default heartbeat JNI abstractions.
@@ -16,6 +18,10 @@ public abstract class AbstractDefaultHeartbeatJNI {
 	 * The pointer to the underlying heartbeat allocated natively.
 	 */
 	protected volatile ByteBuffer nativePtr;
+	/**
+	 * R/W lock for pointer to prevent race conditions that could cause crash.
+	 */
+	protected final ReadWriteLock lock;
 
 	/**
 	 * The output stream to write log data to.
@@ -25,6 +31,7 @@ public abstract class AbstractDefaultHeartbeatJNI {
 	public AbstractDefaultHeartbeatJNI(final ByteBuffer nativePtr, final FileOutputStream logStream) {
 		this.nativePtr = nativePtr;
 		this.logStream = logStream;
+		this.lock = new ReentrantReadWriteLock(true);
 	}
 
 	public FileOutputStream getLogStream() {

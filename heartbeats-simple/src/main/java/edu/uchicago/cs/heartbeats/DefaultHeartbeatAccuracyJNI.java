@@ -8,9 +8,8 @@ import java.nio.ByteBuffer;
  * Gets a heartbeat implementation and exposes methods for performing operations
  * on it. This implementation is a simple wrapper around the JNI functions.
  * 
- * This implementation is <b>NOT</b> thread safe and should be synchronized
- * externally. Attempting to perform operations after {@link #finish()} is
- * called will result in an {@link IllegalStateException}.
+ * Attempting to perform operations after {@link #finish()} is called will
+ * result in an {@link IllegalStateException}.
  * 
  * @author Connor Imes
  */
@@ -70,8 +69,13 @@ public class DefaultHeartbeatAccuracyJNI extends AbstractDefaultHeartbeatJNI imp
 
 	public void heartbeat(final long userTag, final long work, final long startTime, final long endTime,
 			final long accuracy) {
-		enforceNotFinished();
-		HeartbeatAccJNI.get().heartbeatAcc(nativePtr, userTag, work, startTime, endTime, accuracy);
+		try {
+			lock.readLock().lock();
+			enforceNotFinished();
+			HeartbeatAccJNI.get().heartbeatAcc(nativePtr, userTag, work, startTime, endTime, accuracy);
+		} finally {
+			lock.readLock().unlock();
+		}
 	}
 
 	public void heartbeat(final long userTag, final long work, final long startTime, final long endTime) {
@@ -84,96 +88,181 @@ public class DefaultHeartbeatAccuracyJNI extends AbstractDefaultHeartbeatJNI imp
 	}
 
 	public void finish() {
-		enforceNotFinished();
-		finishUnchecked();
+		try {
+			lock.writeLock().lock();
+			enforceNotFinished();
+			finishUnchecked();
+		} finally {
+			lock.writeLock().unlock();
+		}
 	}
 
 	public void logHeader() throws IOException {
-		enforceNotFinished();
-		if (logStream != null) {
-			if (HeartbeatAccJNI.get().heartbeatAccLogHeader(getFileDescriptor(logStream)) != 0) {
-				throw new IOException("Failed to write log header");
+		try {
+			lock.readLock().lock();
+			enforceNotFinished();
+			if (logStream != null) {
+				if (HeartbeatAccJNI.get().heartbeatAccLogHeader(getFileDescriptor(logStream)) != 0) {
+					throw new IOException("Failed to write log header");
+				}
 			}
+		} finally {
+			lock.readLock().unlock();
 		}
 	}
 
 	public void logWindowBuffer() throws IOException {
-		enforceNotFinished();
-		if (logStream != null) {
-			if (HeartbeatAccJNI.get().heartbeatAccLogWindowBuffer(nativePtr, getFileDescriptor(logStream)) != 0) {
-				throw new IOException("Failed to write window buffer");
+		try {
+			lock.readLock().lock();
+			enforceNotFinished();
+			if (logStream != null) {
+				if (HeartbeatAccJNI.get().heartbeatAccLogWindowBuffer(nativePtr, getFileDescriptor(logStream)) != 0) {
+					throw new IOException("Failed to write window buffer");
+				}
 			}
+		} finally {
+			lock.readLock().unlock();
 		}
 	}
 
 	public long getWindowSize() {
-		enforceNotFinished();
-		return HeartbeatAccJNI.get().heartbeatAccGetWindowSize(nativePtr);
+		try {
+			lock.readLock().lock();
+			enforceNotFinished();
+			return HeartbeatAccJNI.get().heartbeatAccGetWindowSize(nativePtr);
+		} finally {
+			lock.readLock().unlock();
+		}
 	}
 
 	public long getUserTag() {
-		enforceNotFinished();
-		return HeartbeatAccJNI.get().heartbeatAccGetUserTag(nativePtr);
+		try {
+			lock.readLock().lock();
+			enforceNotFinished();
+			return HeartbeatAccJNI.get().heartbeatAccGetUserTag(nativePtr);
+		} finally {
+			lock.readLock().unlock();
+		}
 	}
 
 	public long getGlobalTime() {
-		enforceNotFinished();
-		return HeartbeatAccJNI.get().heartbeatAccGetGlobalTime(nativePtr);
+		try {
+			lock.readLock().lock();
+			enforceNotFinished();
+			return HeartbeatAccJNI.get().heartbeatAccGetGlobalTime(nativePtr);
+		} finally {
+			lock.readLock().unlock();
+		}
 	}
 
 	public long getWindowTime() {
-		enforceNotFinished();
-		return HeartbeatAccJNI.get().heartbeatAccGetWindowTime(nativePtr);
+		try {
+			lock.readLock().lock();
+			enforceNotFinished();
+			return HeartbeatAccJNI.get().heartbeatAccGetWindowTime(nativePtr);
+		} finally {
+			lock.readLock().unlock();
+		}
 	}
 
 	public long getGlobalWork() {
-		enforceNotFinished();
-		return HeartbeatAccJNI.get().heartbeatAccGetGlobalWork(nativePtr);
+		try {
+			lock.readLock().lock();
+			enforceNotFinished();
+			return HeartbeatAccJNI.get().heartbeatAccGetGlobalWork(nativePtr);
+		} finally {
+			lock.readLock().unlock();
+		}
 	}
 
 	public long getWindowWork() {
-		enforceNotFinished();
-		return HeartbeatAccJNI.get().heartbeatAccGetWindowWork(nativePtr);
+		try {
+			lock.readLock().lock();
+			enforceNotFinished();
+			return HeartbeatAccJNI.get().heartbeatAccGetWindowWork(nativePtr);
+		} finally {
+			lock.readLock().unlock();
+		}
 	}
 
 	public double getGlobalPerf() {
-		enforceNotFinished();
-		return HeartbeatAccJNI.get().heartbeatAccGetGlobalPerf(nativePtr);
+		try {
+			lock.readLock().lock();
+			enforceNotFinished();
+			return HeartbeatAccJNI.get().heartbeatAccGetGlobalPerf(nativePtr);
+		} finally {
+			lock.readLock().unlock();
+		}
 	}
 
 	public double getWindowPerf() {
-		enforceNotFinished();
-		return HeartbeatAccJNI.get().heartbeatAccGetWindowPerf(nativePtr);
+		try {
+			lock.readLock().lock();
+			enforceNotFinished();
+			return HeartbeatAccJNI.get().heartbeatAccGetWindowPerf(nativePtr);
+		} finally {
+			lock.readLock().unlock();
+		}
 	}
 
 	public double getInstantPerf() {
-		enforceNotFinished();
-		return HeartbeatAccJNI.get().heartbeatAccGetInstantPerf(nativePtr);
+		try {
+			lock.readLock().lock();
+			enforceNotFinished();
+			return HeartbeatAccJNI.get().heartbeatAccGetInstantPerf(nativePtr);
+		} finally {
+			lock.readLock().unlock();
+		}
 	}
 
 	public long getGlobalAccuracy() {
-		enforceNotFinished();
-		return HeartbeatAccJNI.get().heartbeatAccGetGlobalAccuracy(nativePtr);
+		try {
+			lock.readLock().lock();
+			enforceNotFinished();
+			return HeartbeatAccJNI.get().heartbeatAccGetGlobalAccuracy(nativePtr);
+		} finally {
+			lock.readLock().unlock();
+		}
 	}
 
 	public long getWindowAccuracy() {
-		enforceNotFinished();
-		return HeartbeatAccJNI.get().heartbeatAccGetWindowAccuracy(nativePtr);
+		try {
+			lock.readLock().lock();
+			enforceNotFinished();
+			return HeartbeatAccJNI.get().heartbeatAccGetWindowAccuracy(nativePtr);
+		} finally {
+			lock.readLock().unlock();
+		}
 	}
 
 	public double getGlobalAccuracyRate() {
-		enforceNotFinished();
-		return HeartbeatAccJNI.get().heartbeatAccGetGlobalAccuracyRate(nativePtr);
+		try {
+			lock.readLock().lock();
+			enforceNotFinished();
+			return HeartbeatAccJNI.get().heartbeatAccGetGlobalAccuracyRate(nativePtr);
+		} finally {
+			lock.readLock().unlock();
+		}
 	}
 
 	public double getWindowAccuracyRate() {
-		enforceNotFinished();
-		return HeartbeatAccJNI.get().heartbeatAccGetWindowAccuracyRate(nativePtr);
+		try {
+			lock.readLock().lock();
+			enforceNotFinished();
+			return HeartbeatAccJNI.get().heartbeatAccGetWindowAccuracyRate(nativePtr);
+		} finally {
+			lock.readLock().unlock();
+		}
 	}
 
 	public double getInstantAccuracyRate() {
-		enforceNotFinished();
-		return HeartbeatAccJNI.get().heartbeatAccGetInstantAccuracyRate(nativePtr);
+		try {
+			lock.readLock().lock();
+			enforceNotFinished();
+			return HeartbeatAccJNI.get().heartbeatAccGetInstantAccuracyRate(nativePtr);
+		} finally {
+			lock.readLock().unlock();
+		}
 	}
 
 	@Override

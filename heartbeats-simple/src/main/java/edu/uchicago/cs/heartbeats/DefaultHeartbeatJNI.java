@@ -8,9 +8,8 @@ import java.nio.ByteBuffer;
  * Gets a heartbeat implementation and exposes methods for performing operations
  * on it. This implementation is a simple wrapper around the JNI functions.
  * 
- * This implementation is <b>NOT</b> thread safe and should be synchronized
- * externally. Attempting to perform operations after {@link #finish()} is
- * called will result in an {@link IllegalStateException}.
+ * ttempting to perform operations after {@link #finish()} is called will result
+ * in an {@link IllegalStateException}.
  * 
  * @author Connor Imes
  */
@@ -69,8 +68,13 @@ public class DefaultHeartbeatJNI extends AbstractDefaultHeartbeatJNI implements 
 	}
 
 	public void heartbeat(final long userTag, final long work, final long startTime, final long endTime) {
-		enforceNotFinished();
-		HeartbeatJNI.get().heartbeat(nativePtr, userTag, work, startTime, endTime);
+		try {
+			lock.readLock().lock();
+			enforceNotFinished();
+			HeartbeatJNI.get().heartbeat(nativePtr, userTag, work, startTime, endTime);
+		} finally {
+			lock.readLock().unlock();
+		}
 	}
 
 	protected void finishUnchecked() {
@@ -79,71 +83,131 @@ public class DefaultHeartbeatJNI extends AbstractDefaultHeartbeatJNI implements 
 	}
 
 	public void finish() {
-		enforceNotFinished();
-		finishUnchecked();
+		try {
+			lock.writeLock().lock();
+			enforceNotFinished();
+			finishUnchecked();
+		} finally {
+			lock.writeLock().unlock();
+		}
 	}
 
 	public void logHeader() throws IOException {
-		enforceNotFinished();
-		if (logStream != null) {
-			if (HeartbeatJNI.get().heartbeatLogHeader(getFileDescriptor(logStream)) != 0) {
-				throw new IOException("Failed to write log header");
+		try {
+			lock.readLock().lock();
+			enforceNotFinished();
+			if (logStream != null) {
+				if (HeartbeatJNI.get().heartbeatLogHeader(getFileDescriptor(logStream)) != 0) {
+					throw new IOException("Failed to write log header");
+				}
 			}
+		} finally {
+			lock.readLock().unlock();
 		}
 	}
 
 	public void logWindowBuffer() throws IOException {
-		enforceNotFinished();
-		if (logStream != null) {
-			if (HeartbeatJNI.get().heartbeatLogWindowBuffer(nativePtr, getFileDescriptor(logStream)) != 0) {
-				throw new IOException("Failed to write window buffer");
+		try {
+			lock.readLock().lock();
+			enforceNotFinished();
+			if (logStream != null) {
+				if (HeartbeatJNI.get().heartbeatLogWindowBuffer(nativePtr, getFileDescriptor(logStream)) != 0) {
+					throw new IOException("Failed to write window buffer");
+				}
 			}
+		} finally {
+			lock.readLock().unlock();
 		}
 	}
 
 	public long getWindowSize() {
-		enforceNotFinished();
-		return HeartbeatJNI.get().heartbeatGetWindowSize(nativePtr);
+		try {
+			lock.readLock().lock();
+			enforceNotFinished();
+			return HeartbeatJNI.get().heartbeatGetWindowSize(nativePtr);
+		} finally {
+			lock.readLock().unlock();
+		}
 	}
 
 	public long getUserTag() {
-		enforceNotFinished();
-		return HeartbeatJNI.get().heartbeatGetUserTag(nativePtr);
+		try {
+			lock.readLock().lock();
+			enforceNotFinished();
+			return HeartbeatJNI.get().heartbeatGetUserTag(nativePtr);
+		} finally {
+			lock.readLock().unlock();
+		}
 	}
 
 	public long getGlobalTime() {
-		enforceNotFinished();
-		return HeartbeatJNI.get().heartbeatGetGlobalTime(nativePtr);
+		try {
+			lock.readLock().lock();
+			enforceNotFinished();
+			return HeartbeatJNI.get().heartbeatGetGlobalTime(nativePtr);
+		} finally {
+			lock.readLock().unlock();
+		}
 	}
 
 	public long getWindowTime() {
-		enforceNotFinished();
-		return HeartbeatJNI.get().heartbeatGetWindowTime(nativePtr);
+		try {
+			lock.readLock().lock();
+			enforceNotFinished();
+			return HeartbeatJNI.get().heartbeatGetWindowTime(nativePtr);
+		} finally {
+			lock.readLock().unlock();
+		}
 	}
 
 	public long getGlobalWork() {
-		enforceNotFinished();
-		return HeartbeatJNI.get().heartbeatGetGlobalWork(nativePtr);
+		try {
+			lock.readLock().lock();
+			enforceNotFinished();
+			return HeartbeatJNI.get().heartbeatGetGlobalWork(nativePtr);
+		} finally {
+			lock.readLock().unlock();
+		}
 	}
 
 	public long getWindowWork() {
-		enforceNotFinished();
-		return HeartbeatJNI.get().heartbeatGetWindowWork(nativePtr);
+		try {
+			lock.readLock().lock();
+			enforceNotFinished();
+			return HeartbeatJNI.get().heartbeatGetWindowWork(nativePtr);
+		} finally {
+			lock.readLock().unlock();
+		}
 	}
 
 	public double getGlobalPerf() {
-		enforceNotFinished();
-		return HeartbeatJNI.get().heartbeatGetGlobalPerf(nativePtr);
+		try {
+			lock.readLock().lock();
+			enforceNotFinished();
+			return HeartbeatJNI.get().heartbeatGetGlobalPerf(nativePtr);
+		} finally {
+			lock.readLock().unlock();
+		}
 	}
 
 	public double getWindowPerf() {
-		enforceNotFinished();
-		return HeartbeatJNI.get().heartbeatGetWindowPerf(nativePtr);
+		try {
+			lock.readLock().lock();
+			enforceNotFinished();
+			return HeartbeatJNI.get().heartbeatGetWindowPerf(nativePtr);
+		} finally {
+			lock.readLock().unlock();
+		}
 	}
 
 	public double getInstantPerf() {
-		enforceNotFinished();
-		return HeartbeatJNI.get().heartbeatGetInstantPerf(nativePtr);
+		try {
+			lock.readLock().lock();
+			enforceNotFinished();
+			return HeartbeatJNI.get().heartbeatGetInstantPerf(nativePtr);
+		} finally {
+			lock.readLock().unlock();
+		}
 	}
 
 	@Override

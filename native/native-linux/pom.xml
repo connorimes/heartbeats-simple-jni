@@ -14,7 +14,7 @@
 
   <properties>
     <LDFLAGS></LDFLAGS>
-    <CFLAGS>-I/usr/local/include</CFLAGS>
+    <CFLAGS></CFLAGS>
   </properties>
 
   <dependencies>
@@ -32,7 +32,7 @@
         <extensions>true</extensions>
         <configuration>
           <!-- trigger javah -->
-          <javahOS>unix</javahOS>
+          <javahOS>linux</javahOS>
           <sources>
             <source>
               <directory>${basedir}/../src/main/native</directory>
@@ -62,7 +62,6 @@
             <id>javah</id>
             <phase>generate-sources</phase>
             <configuration>
-              <javahOS>unix</javahOS>
               <javahProvider>default</javahProvider>
               <javahOutputDirectory>${project.build.directory}/custom-javah</javahOutputDirectory>
               <workingDirectory>${basedir}</workingDirectory>
@@ -79,7 +78,6 @@
             <id>javah-acc</id>
             <phase>generate-sources</phase>
             <configuration>
-              <javahOS>unix</javahOS>
               <javahProvider>default</javahProvider>
               <javahOutputDirectory>${project.build.directory}/custom-javah</javahOutputDirectory>
               <workingDirectory>${basedir}</workingDirectory>
@@ -96,7 +94,6 @@
             <id>javah-pow</id>
             <phase>generate-sources</phase>
             <configuration>
-              <javahOS>unix</javahOS>
               <javahProvider>default</javahProvider>
               <javahOutputDirectory>${project.build.directory}/custom-javah</javahOutputDirectory>
               <workingDirectory>${basedir}</workingDirectory>
@@ -113,7 +110,6 @@
             <id>javah-acc-pow</id>
             <phase>generate-sources</phase>
             <configuration>
-              <javahOS>unix</javahOS>
               <javahProvider>default</javahProvider>
               <javahOutputDirectory>${project.build.directory}/custom-javah</javahOutputDirectory>
               <workingDirectory>${basedir}</workingDirectory>

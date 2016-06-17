@@ -19,7 +19,7 @@ public final class HeartbeatPowJNI {
 	 */
 	public static HeartbeatPowJNI get() {
 		if (instance == null) {
-			System.loadLibrary("hbs-pow-wrapper");
+			System.loadLibrary("heartbeats-simple-wrapper");
 			instance = new HeartbeatPowJNI();
 		}
 		return instance;

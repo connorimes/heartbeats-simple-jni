@@ -1,12 +1,12 @@
 # Heartbeats-Simple Java Bindings
 
-This project provides Java bindings and thin wrappers around the `heartbeats-simple` libraries.
+This project provides Java bindings and thin wrappers around `heartbeats-simple`.
 
 ## Dependencies
 
 The `heartbeats-simple` libraries and headers should be installed to the system.
 
-The latest `heartbeats-simple` C libraries can be found at
+The latest `heartbeats-simple` source can be found at
 [https://github.com/libheartbeats/heartbeats-simple](https://github.com/libheartbeats/heartbeats-simple).
 
 ## Building
@@ -19,13 +19,19 @@ To build and run junit tests:
 mvn clean install
 ```
 
-If the `heartbeats-simple` libraries are compiled but not installed, you need to specify the `CFLAGS` and `LDFLAGS` properties as part of the build command.
+You may need to add the JDK's native include path by setting the `CFLAGS` property as part of the build command, e.g.:
+```sh
+mvn clean package -DCFLAGS=-I$JAVA_HOME/include/linux
+```
+
+If `heartbeats-simple` is compiled but not installed, you may need to set the `CFLAGS` and `LDFLAGS` properties.
 Unless you are skipping tests (`-DskipTests`), you also need to set the `LD_LIBRARY_PATH` environment variable or export it to your environment.
 
 ```sh
-LD_LIBRARY_PATH=/path/to/heartbeats-simple/_build/lib:$LD_LIBRARY_PATH \
+LD_LIBRARY_PATH=/path/to/heartbeats-simple/_build:$LD_LIBRARY_PATH \
   mvn clean package \
-  -DCFLAGS=-I/path/to/heartbeats-simple/inc -DLDFLAGS=/path/to/heartbeats-simple/_build/lib
+  -DCFLAGS="-I$JAVA_HOME/include/linux -I/path/to/heartbeats-simple/inc" \
+  -DLDFLAGS=-L/path/to/heartbeats-simple/_build
 ```
 
 ## Usage
@@ -47,4 +53,4 @@ The following `interface`:`implementation` pairs are available:
 * `edu.uchicago.cs.heartbeats.HeartbeatPower`:`edu.uchicago.cs.heartbeats.DefaultHeartbeatPower`
 * `edu.uchicago.cs.heartbeats.HeartbeatAccuracyPower`:`edu.uchicago.cs.heartbeats.DefaultHeartbeatAccuracyPower`
 
-When launching, you will need to set the property `java.library.path` to include the location of the native libraries created by the modules `libhbs-wrapper`, `libhbs-acc-wrapper`, `libhbs-pow-wrapper`, and `libhbs-acc-pow-wrapper`.
+When launching, you will need to set the property `java.library.path` to include the location of a native library created by this project: `libheartbeats-simple-wrapper`.

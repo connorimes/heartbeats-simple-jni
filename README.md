@@ -19,18 +19,13 @@ To build and run junit tests:
 mvn clean install
 ```
 
-You may need to add the JDK's native include path by setting the `CFLAGS` property as part of the build command, e.g.:
-```sh
-mvn clean package -DCFLAGS=-I$JAVA_HOME/include/linux
-```
-
 If `heartbeats-simple` is compiled but not installed, you may need to set the `CFLAGS` and `LDFLAGS` properties.
 Unless you are skipping tests (`-DskipTests`), you also need to set the `LD_LIBRARY_PATH` environment variable or export it to your environment.
 
 ```sh
 LD_LIBRARY_PATH=/path/to/heartbeats-simple/_build:$LD_LIBRARY_PATH \
   mvn clean package \
-  -DCFLAGS="-I$JAVA_HOME/include/linux -I/path/to/heartbeats-simple/inc" \
+  -DCFLAGS=-I/path/to/heartbeats-simple/inc \
   -DLDFLAGS=-L/path/to/heartbeats-simple/_build
 ```
 

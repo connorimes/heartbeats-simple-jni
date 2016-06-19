@@ -19,14 +19,13 @@ To build and run junit tests:
 mvn clean install
 ```
 
-If `heartbeats-simple` is compiled but not installed, you may need to set the `CFLAGS` and `LDFLAGS` properties.
-Unless you are skipping tests (`-DskipTests`), you also need to set the `LD_LIBRARY_PATH` environment variable or export it to your environment.
+If `heartbeats-simple` is not installed to a default location, you need to set the `PKG_CONFIG_PATH` environment variable or export it to your environment so that `pkg-config` can discover the library.
+Unless you are skipping tests (`-DskipTests=true`), you must do the same for `LD_LIBRARY_PATH`.
 
 ```sh
-LD_LIBRARY_PATH=/path/to/heartbeats-simple/_build:$LD_LIBRARY_PATH \
-  mvn clean package \
-  -DCFLAGS=-I/path/to/heartbeats-simple/inc \
-  -DLDFLAGS=-L/path/to/heartbeats-simple/_build
+PKG_CONFIG_PATH=/path/to/heartbeats-simple/install/lib/pkgconfig:$PKG_CONFIG_PATH \
+  LD_LIBRARY_PATH=/path/to/heartbeats-simple/install/lib/:$LD_LIBRARY_PATH \
+  mvn clean package
 ```
 
 ## Usage

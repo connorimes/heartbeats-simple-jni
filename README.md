@@ -48,3 +48,10 @@ The following `interface`:`implementation` pairs are available:
 * `edu.uchicago.cs.heartbeats.HeartbeatAccuracyPower`:`edu.uchicago.cs.heartbeats.DefaultHeartbeatAccuracyPower`
 
 When launching, you will need to set the property `java.library.path` to include the location of a native library created by this project: `libheartbeats-simple-wrapper`.
+
+## Project Source
+
+Find this and related project sources at the [libheartbeats organization on GitHub](https://github.com/libheartbeats).  
+This project originates at: https://github.com/libheartbeats/heartbeats-simple-jni
+
+Bug reports and pull requests for bug fixes and enhancements are welcome.

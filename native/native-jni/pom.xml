@@ -4,7 +4,7 @@
   <parent>
     <artifactId>heartbeats-simple-native-parent</artifactId>
     <groupId>edu.uchicago.cs.heartbeats</groupId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <relativePath>..</relativePath>
   </parent>
   <artifactId>heartbeats-simple-native-jni</artifactId>

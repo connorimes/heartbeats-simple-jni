@@ -2,12 +2,13 @@
 
 This project provides Java bindings and thin wrappers around `heartbeats-simple`.
 
+Currently, only Linux is supported.
+
 ## Dependencies
 
 The `heartbeats-simple` libraries and headers should be installed to the system.
 
-The latest `heartbeats-simple` source can be found at
-[https://github.com/libheartbeats/heartbeats-simple](https://github.com/libheartbeats/heartbeats-simple).
+The latest `heartbeats-simple` source can be found at https://github.com/libheartbeats/heartbeats-simple.
 
 ## Building
 
@@ -36,7 +37,7 @@ To integrate with the library, add it as a Maven dependency to your project's `p
     <dependency>
       <groupId>edu.uchicago.cs.heartbeats</groupId>
       <artifactId>heartbeats-simple</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+      <version>0.0.1</version>
     </dependency>
 ```
 

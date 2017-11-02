@@ -37,7 +37,7 @@ To integrate with the library, add it as a Maven dependency to your project's `p
     <dependency>
       <groupId>edu.uchicago.cs.heartbeats</groupId>
       <artifactId>heartbeats-simple</artifactId>
-      <version>0.0.1</version>
+      <version>0.0.2-SNAPSHOT</version>
     </dependency>
 ```
 

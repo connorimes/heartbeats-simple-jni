@@ -1,0 +1,20 @@
+os:
+  - linux
+
+language: java
+
+install:
+  # heartbeats-simple dependency (use dummy implementation)
+  - git clone https://github.com/libheartbeats/heartbeats-simple.git hbs_native
+  - cd hbs_native
+  - mkdir _build
+  - cd _build
+  - cmake -DCMAKE_INSTALL_PREFIX=_install -DBUILD_SHARED_LIBS=True ..
+  - make
+  - make install
+  - cd ../..
+
+script:
+  - export LD_LIBRARY_PATH=`pwd`/hbs_native/_build/_install/lib:$LD_LIBRARY_PATH
+  - export PKG_CONFIG_PATH=`pwd`/hbs_native/_build/_install/lib/pkgconfig:$PKG_CONFIG_PATH
+  - mvn clean package
